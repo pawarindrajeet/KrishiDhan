@@ -1,0 +1,35 @@
+{% extends "admin/admin_master.html" %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px;">
+    <h2 style="color: #1b5e20;">👥 Registered Farmers List</h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+            <tr style="background-color: #2e7d32; color: white; text-align: left;">
+                <th style="padding: 12px;">ID</th>
+                <th style="padding: 12px;">Full Name</th>
+                <th style="padding: 12px;">Mobile</th>
+                <th style="padding: 12px;">Location</th>
+                <th style="padding: 12px;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for farmer in farmers %}
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 10px;">#{{ farmer[0] }}</td>
+                <td style="padding: 10px; font-weight: bold;">{{ farmer[1] }}</td>
+                <td style="padding: 10px;">{{ farmer[2] }}</td>
+                <td style="padding: 10px;">{{ farmer[4] }}, {{ farmer[3] }}</td> <td style="padding: 10px;">
+                    <a href="#" style="color: red; text-decoration: none;">Remove</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" style="padding: 20px; text-align: center;">No farmers registered yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

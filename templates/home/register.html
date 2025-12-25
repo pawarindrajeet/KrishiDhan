@@ -1,0 +1,85 @@
+{% extends "home/home_master.html" %}
+
+{% block content %}
+
+<div class="centered-wrapper">
+    
+    <div class="card" style="width: 100%; max-width: 500px; border-top: 5px solid #f57c00; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+        <div class="card-body" style="padding: 40px;">
+            
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2 style="color: #f57c00; font-weight: 800; font-size: 2rem;">New Registration 📝</h2>
+                <p style="color: #666;">Join the KrishiDhan community today.</p>
+            </div>
+
+            <form action="/register" method="POST">
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">Full Name</label>
+                    <input type="text" name="full_name" required placeholder="e.g. Ram Patil"
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">Mobile Number</label>
+                        <input type="text" name="mobile" required placeholder="e.g. 9876543210"
+                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">Email*</label>
+                        <input type="email" name="email" required placeholder="e.g. ram@gmail.com"
+                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">State</label>
+                        <input type="text" name="state" required placeholder="e.g. Maharashtra"
+                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">District</label>
+                        <input type="text" name="district" required placeholder="e.g. Pune"
+                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">Create Password</label>
+                    <input type="password" name="password" required placeholder="Enter a strong password"
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                </div>
+
+                <input type="hidden" name="role" value="farmer">
+
+                <button type="submit" class="primary-btn" 
+                        style="background: linear-gradient(135deg, #f57c00 0%, #ff9800 100%); border: none; font-size: 1.1rem; width: 100%; border-radius: 8px;">
+                    Register Now 🚀
+                </button>
+
+            </form>
+
+            <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee;">
+                <p style="color: #666;">Already have an account?</p>
+                <a href="/login" style="color: #f57c00; font-weight: bold; text-decoration: none; border-bottom: 2px solid #f57c00;">
+                    Login Here
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <script>
+          alert("{{ message }}");
+      </script>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{% endblock %}

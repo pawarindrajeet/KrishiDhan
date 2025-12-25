@@ -1,0 +1,74 @@
+{% extends "farmer/farmer_master.html" %}
+
+{% block content %}
+<div style="margin-bottom: 40px;">
+    <h1 style="color: #2e7d32; font-weight: 800;">🏛️ Government Schemes & News</h1>
+    <p style="color: #666;">Access core government benefits and see the latest announcements.</p>
+</div>
+
+<h3 style="color: #d32f2f; border-left: 5px solid #d32f2f; padding-left: 15px; margin-bottom: 25px;">
+    🏆 Major Central Schemes
+</h3>
+
+<div class="card-grid" style="margin-bottom: 60px;">
+    {% for scheme in schemes %}
+    <div class="card" style="border-top: 4px solid #d32f2f; transition: transform 0.3s;">
+        <div class="card-body">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                <div style="font-size: 2.5rem;">{{ scheme.icon }}</div>
+                <h3 style="margin: 0; font-size: 1.1rem; color: #333;">{{ scheme.title }}</h3>
+            </div>
+            <p style="color: #555; font-size: 0.95rem; line-height: 1.5;">{{ scheme.description }}</p>
+            <a href="{{ scheme.link }}" target="_blank" style="text-decoration: none;">
+                <button style="width: 100%; margin-top: 15px; background: white; color: #d32f2f; border: 1px solid #d32f2f; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background 0.2s;">
+                    Apply / View Details ↗
+                </button>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+<h3 style="color: #1976d2; border-left: 5px solid #1976d2; padding-left: 15px; margin-bottom: 25px;">
+    📢 Latest Scheme Announcements & News
+</h3>
+
+<div class="card-grid">
+    {% if updates %}
+        {% for article in updates %}
+        <div class="card">
+            {% if article.urlToImage %}
+            <img src="{{ article.urlToImage }}" alt="News" style="height: 160px; width: 100%; object-fit: cover;">
+            {% else %}
+            <div style="height: 160px; background: #eee; display: flex; align-items: center; justify-content: center; color: #aaa; font-weight: bold;">
+                📰 No Image
+            </div>
+            {% endif %}
+            
+            <div class="card-body" style="display: flex; flex-direction: column;">
+                <h4 style="margin: 0 0 10px 0; font-size: 1rem; line-height: 1.4; color: #222;">
+                    {{ article.title }}
+                </h4>
+                <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px; flex-grow: 1;">
+                    {{ article.description[:90] }}...
+                </p>
+                
+                <div style="margin-top: auto;">
+                    <a href="{{ article.url }}" target="_blank" style="text-decoration: none;">
+                        <button style="background: #e3f2fd; color: #1565c0; border: none; padding: 8px 12px; border-radius: 4px; font-weight: bold; font-size: 0.85rem; cursor: pointer; width: 100%;">
+                            Read Full Update
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="grid-column: 1/-1; background: white; padding: 30px; text-align: center; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <h3 style="color: #777;">📵 No Recent Updates</h3>
+            <p>Could not load the latest news. Please check your internet connection.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

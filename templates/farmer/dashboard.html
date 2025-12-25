@@ -1,0 +1,106 @@
+{% extends "farmer/farmer_master.html" %}
+
+{% block content %}
+<div style="margin-bottom: 30px;">
+    <h1 style="color: #2e7d32; font-weight: 700;">Welcome back, {{ user[0] }}! 🚜</h1>
+    <p style="color: #666;">Here is your farm overview and daily updates.</p>
+</div>
+
+<div class="card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border: none; margin-bottom: 40px; box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);">
+    <div class="card-body">
+        {% if weather %}
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h4 style="margin: 0; opacity: 0.9; font-weight: normal;">Current Weather in</h4>
+                    <h2 style="margin: 5px 0; font-size: 2.5rem; font-weight: bold;">📍 {{ weather.name }}</h2>
+                    <h1 style="margin: 0; font-size: 3.5rem; font-weight: bold;">{{ weather.main.temp }}°C</h1>
+                    <p style="font-size: 1.1rem; text-transform: capitalize;">☁️ {{ weather.weather[0].description }}</p>
+                </div>
+                <div>
+                    <img src="https://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@4x.png" alt="Weather Icon" style="width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(255,255,255,0.4));">
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; display: flex; gap: 40px; flex-wrap: wrap;">
+                <div>
+                    <small style="opacity: 0.9;">💧 Humidity</small><br>
+                    <strong style="font-size: 1.2rem;">{{ weather.main.humidity }}%</strong>
+                </div>
+                <div>
+                    <small style="opacity: 0.9;">🌬️ Wind Speed</small><br>
+                    <strong style="font-size: 1.2rem;">{{ weather.wind.speed }} m/s</strong>
+                </div>
+                <div>
+                    <small style="opacity: 0.9;">🌡️ Feels Like</small><br>
+                    <strong style="font-size: 1.2rem;">{{ weather.main.feels_like }}°C</strong>
+                </div>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 20px;">
+                <h3>🌤️ Weather Unavailable</h3>
+                <p>Could not load weather data for your district. Please check your internet connection.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<h3 style="color: #2e7d32; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px;">Your Services</h3>
+
+<div class="card-grid">
+    
+    <div class="card feature-card">
+        <div style="height: 120px; background: #e3f2fd; display: flex; align-items: center; justify-content: center; font-size: 40px; border-radius: 12px 12px 0 0;">🤖</div>
+        <div class="card-body" style="text-align: center;">
+            <h3>AI Recommender</h3>
+            <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Get scientific crop advice based on soil N-P-K values.</p>
+            <a href="/recommend"><button class="primary-btn" style="background: #1976d2;">Get Advice</button></a>
+        </div>
+    </div>
+
+    <div class="card feature-card">
+        <div style="height: 120px; background: #ffebee; display: flex; align-items: center; justify-content: center; font-size: 40px; border-radius: 12px 12px 0 0;">🩺</div>
+        <div class="card-body" style="text-align: center;">
+            <h3>Plant Doctor</h3>
+            <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Upload a photo of a leaf to detect diseases instantly.</p>
+            <a href="/plant_doctor"><button class="primary-btn" style="background: #d32f2f;">Check Health</button></a>
+        </div>
+    </div>
+
+    <div class="card feature-card">
+        <div style="height: 120px; background: #fff3e0; display: flex; align-items: center; justify-content: center; font-size: 40px; border-radius: 12px 12px 0 0;">🛒</div>
+        <div class="card-body" style="text-align: center;">
+            <h3>Agri Shop</h3>
+            <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Buy quality seeds, fertilizers, and tools directly.</p>
+            <a href="/shop"><button class="primary-btn" style="background: #f57c00;">Go to Shop</button></a>
+        </div>
+    </div>
+
+    <div class="card feature-card">
+        <div style="height: 120px; background: #f3e5f5; display: flex; align-items: center; justify-content: center; font-size: 40px; border-radius: 12px 12px 0 0;">🌱</div>
+        <div class="card-body" style="text-align: center;">
+            <h3>My Farm</h3>
+            <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Track your currently sown crops and schedules.</p>
+            <a href="/my_crops"><button class="primary-btn" style="background: #7b1fa2;">Manage Farm</button></a>
+        </div>
+    </div>
+
+    <div class="card feature-card">
+        <div style="height: 120px; background: #fffde7; display: flex; align-items: center; justify-content: center; font-size: 40px; border-radius: 12px 12px 0 0;">📐</div>
+        <div class="card-body" style="text-align: center;">
+            <h3>Land Calculator</h3>
+            <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Convert Guntha, Acre, and Hectare easily.</p>
+            <a href="/calculator"><button class="primary-btn" style="background: #fbc02d; color: #333;">Calculate</button></a>
+        </div>
+    </div>
+
+    <div class="card feature-card">
+        <div style="height: 120px; background: #e8f5e9; display: flex; align-items: center; justify-content: center; font-size: 40px; border-radius: 12px 12px 0 0;">📚</div>
+        <div class="card-body" style="text-align: center;">
+            <h3>Crop Info</h3>
+            <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Read about soil types, seasons, and farming tips.</p>
+            <a href="/crops"><button class="primary-btn" style="background: #388e3c;">Read More</button></a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

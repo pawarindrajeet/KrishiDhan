@@ -1,0 +1,48 @@
+{% extends "home/home_master.html" %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 20px;">
+    <h2 style="color: #2e7d32;">☁️ Weather Forecast</h2>
+    <p>Check the latest conditions for your farm.</p>
+    
+    <form action="/weather" method="POST" style="margin: 20px;">
+        <input type="text" name="city" placeholder="Enter City Name (e.g. Pune)" value="{{ city }}" 
+               style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
+        <button type="submit" style="padding: 10px 20px; background: #2e7d32; color: white; border: none; cursor: pointer;">Check Weather</button>
+    </form>
+</div>
+
+<div class="card-grid" style="justify-content: center;">
+    
+    <div class="card" style="border-top: 4px solid #fbc02d;">
+        <h3>🌡️ Temperature</h3>
+        <h1 style="font-size: 48px; margin: 10px 0;">{{ weather.temp }}°C</h1>
+        <p>{{ weather.desc }}</p> </div>
+
+    <div class="card" style="border-top: 4px solid #0288d1;">
+        <h3>💧 Humidity</h3>
+        <h1 style="font-size: 48px; margin: 10px 0;">{{ weather.humidity }}%</h1>
+        <p>Chance of Rain: {{ "High" if weather.humidity > 80 else "Low" }}</p>
+    </div>
+
+    <div class="card" style="border-top: 4px solid #7b1fa2;">
+        <h3>💨 Wind Speed</h3>
+        <h1 style="font-size: 48px; margin: 10px 0;">{{ weather.wind }}</h1>
+        <p>km/h</p>
+    </div>
+
+</div>
+
+<div style="margin-top: 30px; background: #e8f5e9; padding: 20px; border-radius: 8px; text-align: center;">
+    <h3 style="color: #2e7d32;">💡 Farming Tip for Today:</h3>
+    <p>
+        {% if weather.temp > 30 %}
+            It's very hot today! Ensure your crops are well-irrigated to prevent heat stress. ☀️
+        {% elif weather.humidity > 80 %}
+            High humidity detected. Watch out for fungal diseases in crops like Grapes and Tomato. 🍄
+        {% else %}
+            Weather looks good! Ideal day for fertilizer application. ✅
+        {% endif %}
+    </p>
+</div>
+{% endblock %}

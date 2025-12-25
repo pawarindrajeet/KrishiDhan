@@ -1,0 +1,179 @@
+{% extends "farmer/farmer_master.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 900px;">
+    
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="color: #2e7d32; font-weight: 800;">🛡️ Crop Insurance Premium Calculator</h2>
+        <p style="color: #666;">Estimate your share of the premium for Pradhan Mantri Fasal Bima Yojana (PMFBY).</p>
+    </div>
+
+    <div class="card" style="border-top: 6px solid #fbc02d; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+        <div class="card-body" style="padding: 40px;">
+            
+            <form id="insuranceForm">
+                <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    
+                    <div>
+                        <label style="font-weight: bold; color: #333;">Season <span style="color: red;">*</span></label>
+                        <select id="season" class="form-control" onchange="updateRate()" required>
+                            <option value="">-- Select Season --</option>
+                            <option value="Kharif">Kharif (Summer)</option>
+                            <option value="Rabi">Rabi (Winter)</option>
+                        </select>
+                        <small id="rateDisplay" style="color: #2e7d32; font-weight: bold; display: none;"></small>
+                    </div>
+
+                    <div>
+                        <label style="font-weight: bold; color: #333;">Year <span style="color: red;">*</span></label>
+                        <select class="form-control">
+                            <option>2025</option>
+                            <option>2026</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="font-weight: bold; color: #333;">Scheme <span style="color: red;">*</span></label>
+                        <select class="form-control" disabled style="background: #e9ecef;">
+                            <option>Pradhan Mantri Fasal Bima Yojana (PMFBY)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="font-weight: bold; color: #333;">State <span style="color: red;">*</span></label>
+                        <select class="form-control">
+                            <option>Maharashtra</option>
+                            <option>Punjab</option>
+                            <option>Haryana</option>
+                            <option>Madhya Pradesh</option>
+                            <option>Uttar Pradesh</option>
+                            </select>
+                    </div>
+
+                    <div>
+                        <label style="font-weight: bold; color: #333;">Crop Type <span style="color: red;">*</span></label>
+                        <select id="cropType" class="form-control" onchange="updateRate()" required>
+                            <option value="FoodGrain">Food Grain / Oilseeds (Wheat, Rice, etc.)</option>
+                            <option value="Commercial">Commercial / Horticultural (Cotton, Sugarcane, Fruits)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="font-weight: bold; color: #333;">Area (in Hectares) <span style="color: red;">*</span></label>
+                        <input type="number" id="area" class="form-control" placeholder="e.g. 2" required>
+                    </div>
+
+                    <div>
+                        <label style="font-weight: bold; color: #333;">Sum Insured / Loan Amount (₹) <span style="color: red;">*</span></label>
+                        <input type="number" id="sumInsured" class="form-control" placeholder="e.g. 50000" required>
+                        <small style="color: #666;">Enter the value of your crop or loan amount.</small>
+                    </div>
+
+                </div>
+
+                <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: flex-end;">
+                    <button type="button" onclick="resetForm()" style="background: #ffc107; color: #333; border: none; padding: 12px 30px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        Reset
+                    </button>
+                    <button type="button" onclick="calculatePremium()" style="background: #e0e0e0; color: #333; border: 1px solid #999; padding: 12px 30px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        Calculate
+                    </button>
+                </div>
+
+            </form>
+
+            <div id="resultSection" style="display: none; margin-top: 40px; background: #f1f8e9; padding: 25px; border-radius: 10px; border: 1px solid #c5e1a5; animation: fadeIn 0.5s;">
+                <h3 style="color: #2e7d32; text-align: center; margin-top: 0;">📋 Calculation Result</h3>
+                <hr style="border-top: 1px solid #c5e1a5;">
+                
+                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; text-align: center; margin-top: 20px;">
+                    <div style="flex: 1;">
+                        <small>Total Sum Insured</small>
+                        <h2 style="color: #333;">₹ <span id="resSum">0</span></h2>
+                    </div>
+                    <div style="flex: 1;">
+                        <small>Applicable Rate</small>
+                        <h2 style="color: #1976d2;"><span id="resRate">0</span>%</h2>
+                    </div>
+                    <div style="flex: 1; border: 2px dashed #2e7d32; padding: 10px; border-radius: 8px; background: white;">
+                        <small style="color: #2e7d32; font-weight: bold;">YOU PAY (Premium)</small>
+                        <h1 style="color: #2e7d32; margin: 5px 0;">₹ <span id="resPremium">0</span></h1>
+                    </div>
+                </div>
+                
+                <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: #666;">
+                    * The government pays the remaining premium amount. This is an estimate based on standard PMFBY rates.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateRate() {
+        let season = document.getElementById("season").value;
+        let cropType = document.getElementById("cropType").value;
+        let rateDisplay = document.getElementById("rateDisplay");
+        let rate = 0;
+
+        if (cropType === "Commercial") {
+            rate = 5.0; // Commercial/Horticultural is always 5%
+        } else if (season === "Kharif") {
+            rate = 2.0; // Kharif Food Grains is 2%
+        } else if (season === "Rabi") {
+            rate = 1.5; // Rabi Food Grains is 1.5%
+        }
+
+        if (rate > 0) {
+            rateDisplay.innerText = "Applicable Farmer Rate: " + rate + "%";
+            rateDisplay.style.display = "block";
+        } else {
+            rateDisplay.style.display = "none";
+        }
+        return rate;
+    }
+
+    function calculatePremium() {
+        let area = parseFloat(document.getElementById("area").value);
+        let sumInsured = parseFloat(document.getElementById("sumInsured").value);
+        let rate = updateRate();
+
+        if (isNaN(area) || isNaN(sumInsured) || rate === 0) {
+            alert("Please fill all details correctly to calculate.");
+            return;
+        }
+
+        // Formula: Premium = Sum Insured * (Rate / 100)
+        let totalSum = sumInsured; 
+        let premium = totalSum * (rate / 100);
+
+        // Update UI
+        document.getElementById("resSum").innerText = totalSum.toLocaleString('en-IN');
+        document.getElementById("resRate").innerText = rate;
+        document.getElementById("resPremium").innerText = premium.toLocaleString('en-IN');
+
+        document.getElementById("resultSection").style.display = "block";
+    }
+
+    function resetForm() {
+        document.getElementById("insuranceForm").reset();
+        document.getElementById("resultSection").style.display = "none";
+        document.getElementById("rateDisplay").style.display = "none";
+    }
+</script>
+
+<style>
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}

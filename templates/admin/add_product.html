@@ -1,0 +1,25 @@
+{% extends "admin/admin_master.html" %}
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px;">
+    <h2 style="color: #2e7d32; text-align: center;">➕ Add Shop Product</h2>
+    <form action="/add_product" method="POST" enctype="multipart/form-data">
+        <label>Product Name</label>
+        <input type="text" name="name" required placeholder="e.g. Urea Fertilizer">
+        
+        <label>Category</label>
+        <select name="category" style="width: 100%; padding: 10px; margin-bottom: 15px;">
+            <option value="Seeds">Seeds</option>
+            <option value="Fertilizer">Fertilizer</option>
+            <option value="Tools">Tools</option>
+        </select>
+
+        <label>Price (₹)</label>
+        <input type="number" name="price" required placeholder="e.g. 500">
+
+        <label>Product Image</label>
+        <input type="file" name="image" required style="margin-bottom: 20px;">
+
+        <button type="submit" class="primary-btn">Add Product</button>
+    </form>
+</div>
+{% endblock %}

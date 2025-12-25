@@ -1,0 +1,93 @@
+{% extends "home/home_master.html" %}
+
+{% block content %}
+
+<div id="hero-section" class="fade-in">
+    
+    <div class="hero-wrapper">
+        
+        <div class="hero-text">
+            <h1 class="main-heading">Empowering Farmers,<br> <span class="highlight">Cultivating Wealth</span> 🌾</h1>
+            <p class="sub-heading">
+                KrishiDhan brings modern technology to your fields. 
+                Get real-time weather, AI crop advice, and direct market access.
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="/login" class="btn-primary-lg">Login 🔐</a>
+                
+                <a href="/register" class="btn-outline-lg">Join Now 📝</a>
+                
+                <a href="/calculator" class="btn-outline-lg" style="border-color: #1565C0; color: #1565C0;">
+                    Calculator 📐
+                </a>
+            </div>
+            
+            <div class="trust-badges">
+                <span>✅ AI Powered</span>
+                <span>✅ 100% Free</span>
+                <span>✅ Expert Support</span>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="weather-card-glass">
+                <div class="weather-header">
+                    <h3>Live Weather 🌦️</h3>
+                    <form action="/" method="POST" class="weather-form-compact">
+                        <input type="text" name="city" placeholder="City..." value="{{ city }}" required>
+                        <button type="submit">🔍</button>
+                    </form>
+                </div>
+
+                {% if weather %}
+                    <div class="weather-body">
+                        <img src="https://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@4x.png" alt="Icon">
+                        <div>
+                            <h2 class="temp">{{ weather.main.temp }}°C</h2>
+                            <p class="loc">📍 {{ weather.name }}</p>
+                            <p class="desc">{{ weather.weather[0].description }}</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="weather-empty">
+                        <p>Enter your city to check live forecast.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="features-section">
+        <h3 class="section-title">Why Choose KrishiDhan?</h3>
+        <div class="card-grid">
+            <div class="card feature-card">
+                <div class="icon-box">📡</div>
+                <h4>Smart Sensing</h4>
+                <p>Satellite-based precision weather tracking.</p>
+            </div>
+            <div class="card feature-card">
+                <div class="icon-box">🧪</div>
+                <h4>Soil Analysis</h4>
+                <p>AI-driven crop recommendations.</p>
+            </div>
+            <div class="card feature-card">
+                <div class="icon-box">🚜</div>
+                <h4>Community</h4>
+                <p>Connect directly with mandi markets.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <script>alert("{{ message }}");</script>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{% endblock %}

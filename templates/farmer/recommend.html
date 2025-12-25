@@ -1,0 +1,85 @@
+{% extends "farmer/farmer_master.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 900px;">
+    
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="color: #2e7d32; font-weight: 800;">🤖 AI Crop Recommender</h2>
+        <p style="color: #666;">Enter your soil and climate data to get a scientific crop suggestion.</p>
+    </div>
+
+    <div class="card" style="border-top: 5px solid #1976d2; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+        <div class="card-body" style="padding: 30px;">
+            
+            <form action="/recommend" method="POST">
+                
+                <h4 style="color: #1976d2; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">🧪 Soil Nutrients (N-P-K)</h4>
+                
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="font-weight: bold;">Nitrogen (N)</label>
+                        <input type="number" name="N" placeholder="e.g. 90" required step="any">
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="font-weight: bold;">Phosphorus (P)</label>
+                        <input type="number" name="P" placeholder="e.g. 42" required step="any">
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="font-weight: bold;">Potassium (K)</label>
+                        <input type="number" name="K" placeholder="e.g. 43" required step="any">
+                    </div>
+                </div>
+
+                <h4 style="color: #f57c00; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px;">🌤️ Climate & Soil Conditions</h4>
+
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="font-weight: bold;">Temperature (°C)</label>
+                        <input type="number" name="temperature" placeholder="e.g. 20.8" required step="any">
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="font-weight: bold;">Humidity (%)</label>
+                        <input type="number" name="humidity" placeholder="e.g. 82.0" required step="any">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="font-weight: bold;">pH Level (0-14)</label>
+                        <input type="number" name="ph" placeholder="e.g. 6.5" required step="any">
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="font-weight: bold;">Rainfall (mm)</label>
+                        <input type="number" name="rainfall" placeholder="e.g. 202.9" required step="any">
+                    </div>
+                </div>
+
+                <button type="submit" class="primary-btn" style="margin-top: 20px; font-size: 1.2rem; background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);">
+                    🚀 Predict Best Crop
+                </button>
+            </form>
+        </div>
+    </div>
+
+    {% if prediction %}
+    <div id="result" style="margin-top: 40px; text-align: center; animation: slideUp 0.5s;">
+        <div class="card" style="background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%); color: white; border: none;">
+            <div class="card-body" style="padding: 40px;">
+                <h3 style="margin: 0; opacity: 0.9;">Best Crop for your Farm:</h3>
+                <h1 style="font-size: 4rem; margin: 10px 0; text-transform: uppercase; letter-spacing: 2px;">{{ prediction }} 🌾</h1>
+                <p>Based on scientific analysis of your soil data.</p>
+                <a href="/crops" style="color: white; font-weight: bold; text-decoration: underline;">Read growing tips for {{ prediction }} &rarr;</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<style>
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}

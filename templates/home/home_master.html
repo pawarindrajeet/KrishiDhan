@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KrishiDhan - Agriculture Portal</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="nav-brand">
+            <img src="{{ url_for('static', filename='images/logo_header.png') }}" alt="KrishiDhan Logo">
+        </a>
+        
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/news_schemes">News</a>
+            <a href="/login" style="font-weight: 600;">Login 🔐</a>
+            
+            <a href="/register" style="background: white; color: #2e7d32; padding: 8px 15px; border-radius: 20px; font-weight: bold;">
+                Register 📝
+            </a>
+        </div>
+        
+        <div id="google_translate_element"></div>
+    </nav>
+
+    <div class="container" style="width: 100%; max-width: 100%; padding: 0;">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% include 'common/footer.html' %}
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+          new google.translate.TranslateElement({
+              pageLanguage: 'en',
+              includedLanguages: 'en,hi,mr,gu,pa,bn,ta,te,kn,ml',
+              layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+          }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</html>

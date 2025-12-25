@@ -1,0 +1,50 @@
+{% extends "admin/admin_master.html" %}
+{% block content %}
+<div class="container">
+    <h1 style="color: #2e7d32; margin-bottom: 30px;">👥 Farmer Activity Log</h1>
+
+    <div style="background: white; padding: 25px; border-radius: 10px; margin-bottom: 40px; border-top: 5px solid #f57c00;">
+        <h3 style="margin-top: 0;">🛍️ Recent Shop Orders</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+            <tr style="background: #fff3e0; text-align: left;">
+                <th style="padding: 10px;">Farmer Name</th>
+                <th>Product Bought</th>
+                <th>Price</th>
+                <th>Date</th>
+            </tr>
+            {% for order in orders %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 10px; font-weight: bold;">{{ order[1] }}</td>
+                <td>{{ order[2] }}</td>
+                <td>₹ {{ order[3] }}</td>
+                <td>{{ order[4] }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" style="padding: 20px; text-align: center;">No orders yet.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div style="background: white; padding: 25px; border-radius: 10px; border-top: 5px solid #2e7d32;">
+        <h3 style="margin-top: 0;">🌱 What Farmers Are Growing</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+            <tr style="background: #e8f5e9; text-align: left;">
+                <th style="padding: 10px;">Farmer Name</th>
+                <th>Crop</th>
+                <th>Stage</th>
+                <th>Sown Date</th>
+            </tr>
+            {% for crop in crops %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 10px; font-weight: bold;">{{ crop[1] }}</td>
+                <td>{{ crop[2] }}</td>
+                <td><span style="background: #c8e6c9; color: #1b5e20; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem;">{{ crop[3] }}</span></td>
+                <td>{{ crop[4] }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" style="padding: 20px; text-align: center;">No active crops found.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

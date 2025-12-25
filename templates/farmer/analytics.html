@@ -1,0 +1,116 @@
+{% extends "farmer/farmer_master.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 1000px; margin-bottom: 50px;">
+    
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="color: #2e7d32; font-weight: 800;">📈 Mandi Market Trends</h2>
+        <p style="color: #666;">Analyze price history to decide the best time to sell.</p>
+    </div>
+
+    <div class="card" style="box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 5px solid #1976d2;">
+        <div class="card-body" style="padding: 20px;">
+            <canvas id="marketChart" style="max-height: 400px;"></canvas>
+        </div>
+    </div>
+
+    <div class="card-grid" style="margin-top: 30px;">
+        
+        <div class="card" style="border-left: 5px solid #2e7d32;">
+            <div class="card-body">
+                <h3 style="color: #2e7d32; margin: 0;">🌾 Wheat Analysis</h3>
+                <p style="font-size: 0.9rem; color: #555;">Trend: <b style="color: #2e7d32;">Rising ⬆</b></p>
+                <p>Prices are peaking. Good time to sell stored stock.</p>
+            </div>
+        </div>
+
+        <div class="card" style="border-left: 5px solid #fbc02d;">
+            <div class="card-body">
+                <h3 style="color: #fbc02d; margin: 0;">🍚 Rice Analysis</h3>
+                <p style="font-size: 0.9rem; color: #555;">Trend: <b>Stable ➡</b></p>
+                <p>Market is stable. Hold if you expect demand to rise next month.</p>
+            </div>
+        </div>
+
+        <div class="card" style="border-left: 5px solid #d32f2f;">
+            <div class="card-body">
+                <h3 style="color: #d32f2f; margin: 0;">🧶 Cotton Analysis</h3>
+                <p style="font-size: 0.9rem; color: #555;">Trend: <b style="color: #2e7d32;">High Demand 🔥</b></p>
+                <p>Industrial demand is high. Prices at 6-month high.</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // ✅ 1. CATCH DATA FROM PYTHON
+        // variables passed from app.py are caught here
+        const months = JSON.parse('{{ months | safe }}');
+        const wheatData = JSON.parse('{{ wheat | safe }}');
+        const riceData = JSON.parse('{{ rice | safe }}');
+        const cottonData = JSON.parse('{{ cotton | safe }}');
+
+        // 2. RENDER THE CHART
+        const ctx = document.getElementById('marketChart').getContext('2d');
+        const marketChart = new Chart(ctx, {
+            type: 'line', 
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: 'Wheat (₹/Quintal)',
+                        data: wheatData,
+                        borderColor: '#2e7d32', // Green
+                        backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Rice (₹/Quintal)',
+                        data: riceData,
+                        borderColor: '#fbc02d', // Yellow
+                        backgroundColor: 'rgba(251, 192, 45, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Cotton (₹/Quintal)',
+                        data: cottonData,
+                        borderColor: '#d32f2f', // Red
+                        backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: true, text: 'Price History (Live Python Data)' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: { display: true, text: 'Price (₹)' }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

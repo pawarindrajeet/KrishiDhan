@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard - KrishiDhan</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body class="dashboard-body">
+
+    <div class="mobile-header">
+        <button onclick="toggleSidebar()" style="background:none; border:none; color:white; font-size:24px;">☰</button>
+        <span style="font-weight:600; font-size: 1.1rem;">KrishiDhan</span>
+        <button onclick="startListening()" style="background:none; border:none; font-size:24px;">🎤</button>
+    </div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="{{ url_for('static', filename='images/logo_header.png') }}" class="logo-img" alt="Logo">
+            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+        </div>
+
+        <div class="nav-links">
+            <a href="/farmer_dashboard">
+                <span class="nav-icon">🏠</span> <span class="nav-text">Home</span>
+            </a>
+            
+            <div class="menu-label">Smart Tools</div>
+            
+            <a href="/recommend">
+                <span class="nav-icon">🤖</span> <span class="nav-text">AI Advice</span>
+            </a>
+            <a href="/plant_doctor">
+                <span class="nav-icon">🩺</span> <span class="nav-text">Plant Doctor</span>
+            </a>
+            <a href="/analytics">
+                <span class="nav-icon">📈</span> <span class="nav-text">Market Trends</span>
+            </a>
+
+            <div class="menu-label">Farm & Shop</div>
+
+            <a href="/my_crops">
+                <span class="nav-icon">🌱</span> <span class="nav-text">My Farm</span>
+            </a>
+            
+            <a href="/shop">
+                <span class="nav-icon">🛍️</span> <span class="nav-text">Shop</span>
+            </a>
+            
+            <a href="/cart">
+                <span class="nav-icon">🛒</span> <span class="nav-text">Cart</span>
+                {% if cart_count > 0 %}
+                <span class="badge">{{ cart_count }}</span>
+                {% endif %}
+            </a>
+
+            <a href="/news_schemes">
+                <span class="nav-icon">📢</span> <span class="nav-text">News</span>
+            </a>
+
+            <div style="margin-top: auto;"></div> 
+            
+            <a href="/profile">
+                <span class="nav-icon">👤</span> <span class="nav-text">Profile</span>
+            </a>
+            <a href="/logout" style="background: rgba(0,0,0,0.2);">
+                <span class="nav-icon">🚪</span> <span class="nav-text">Logout</span>
+            </a>
+        </div>
+        
+        <div style="padding: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
+            <select id="voiceLang" style="width: 100%; margin-bottom: 10px; padding: 5px; border-radius: 5px; border:none;">
+                <option value="en-US">English</option>
+                <option value="hi-IN">Hindi</option>
+                <option value="mr-IN">Marathi</option>
+            </select>
+            <button onclick="startListening()" id="micButton" style="width: 100%; padding: 10px; background: #fbc02d; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: #333; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span>🎤</span> <span class="nav-text">Voice Command</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-wrapper">
+        <div id="google_translate_element" style="position: absolute; top: 15px; right: 25px; z-index: 10;"></div>
+        
+        <div class="content-container">
+            {% block content %}{% endblock %}
+        </div>
+        
+        {% include 'common/footer.html' %}
+    </main>
+
+    <script>
+        // 1. Sidebar Toggle Logic
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
+                sidebar.classList.toggle('active-mobile');
+            } else {
+                sidebar.classList.toggle('collapsed');
+            }
+        }
+
+        // 2. Active Tab Logic
+        const currentLocation = location.pathname;
+        const menuItems = document.querySelectorAll('.nav-links a');
+        menuItems.forEach(item => {
+            if(item.getAttribute('href') === currentLocation) {
+                item.classList.add('active');
+            }
+        });
+
+        // 3. Voice Logic
+        function startListening() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("Please use Google Chrome."); return;
+            }
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            const btn = document.getElementById("micButton");
+            const lang = document.getElementById("voiceLang").value;
+            
+            recognition.lang = lang;
+            recognition.start();
+            
+            const originalText = btn.innerHTML;
+            btn.style.background = "#d32f2f"; // Turn red
+            btn.style.color = "white";
+            btn.innerHTML = "<span>👂</span> Listening...";
+
+            recognition.onresult = function(event) {
+                const cmd = event.results[0][0].transcript.toLowerCase();
+                if (cmd.includes("home")) window.location.href = "/farmer_dashboard";
+                else if (cmd.includes("advice")) window.location.href = "/recommend";
+                else if (cmd.includes("doctor")) window.location.href = "/plant_doctor";
+                else if (cmd.includes("market")) window.location.href = "/analytics";
+                else if (cmd.includes("shop")) window.location.href = "/shop";
+                else if (cmd.includes("cart")) window.location.href = "/cart";
+                else alert("Did not catch that! Try saying 'Home' or 'Market'");
+                
+                resetMic(originalText);
+            };
+            
+            recognition.onerror = function() { resetMic(originalText); };
+            recognition.onend = function() { resetMic(originalText); };
+        }
+        
+        function resetMic(originalText) {
+            const btn = document.getElementById("micButton");
+            btn.style.background = "#fbc02d";
+            btn.style.color = "#333";
+            btn.innerHTML = originalText || "<span>🎤</span> Voice Command";
+        }
+        
+        // 4. Google Translate
+        function googleTranslateElementInit() {
+          new google.translate.TranslateElement({
+              pageLanguage: 'en',
+              includedLanguages: 'en,hi,mr,gu,pa,bn,ta,te,kn,ml',
+              layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+          }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div id="flashModal" style="display: block; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); animation: fadeIn 0.3s;">
+        
+        <div style="background-color: white; margin: 15% auto; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border-top: 6px solid #2e7d32; position: relative; animation: slideDown 0.3s;">
+            
+            <div style="font-size: 50px; margin-bottom: 15px;">🛒</div>
+            
+            <h2 style="color: #333; margin-top: 0;">Success!</h2>
+            
+            <p style="font-size: 1.1rem; color: #555; margin-bottom: 25px;">
+                {{ messages[0][1] }}
+            </p>
+
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="document.getElementById('flashModal').style.display='none'" 
+                        class="primary-btn" 
+                        style="width: 100px; background: #ddd; color: #333;">
+                    Continue
+                </button>
+                
+                <a href="/cart">
+                    <button class="primary-btn" style="width: 120px;">
+                        View Cart ➡
+                    </button>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideDown { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+  {% endif %}
+{% endwith %}
+
+</body>
+</html>

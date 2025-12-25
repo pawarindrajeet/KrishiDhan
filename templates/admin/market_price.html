@@ -1,0 +1,28 @@
+{% extends "admin/admin_master.html" %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px;">
+    <h2 style="color: #1b5e20;">📈 Update Market Price</h2>
+
+    <form action="/update_price" method="POST">
+        
+        <label><b>Select Crop:</b></label>
+        <select name="crop_id" required style="width: 100%; padding: 8px; margin-bottom: 10px;">
+            {% for crop in crops %}
+                <option value="{{ crop[0] }}">{{ crop[1] }} ({{ crop[2] }})</option>
+            {% endfor %}
+        </select>
+
+        <label><b>State:</b></label>
+        <input type="text" name="state" required placeholder="e.g. Maharashtra" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+
+        <label><b>District:</b></label>
+        <input type="text" name="district" required placeholder="e.g. Nashik" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+
+        <label><b>Price per Quintal (₹):</b></label>
+        <input type="number" name="price" required placeholder="e.g. 2500" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+
+        <button type="submit" style="background-color: #2e7d32; color: white; padding: 10px 20px; border: none; cursor: pointer; width: 100%;">Update Price</button>
+    </form>
+</div>
+{% endblock %}

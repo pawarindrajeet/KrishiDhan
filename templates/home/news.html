@@ -1,0 +1,128 @@
+{% extends "home/home_master.html" %}
+
+{% block content %}
+<div class="container" style="padding: 40px 20px;">
+    
+    <div style="text-align: center; margin-bottom: 50px;">
+        <h2 style="color: #333; font-weight: 800; font-size: 2.2rem; display: inline-block; border-bottom: 4px solid #2e7d32; padding-bottom: 5px;">
+            📰 Agriculture News & Schemes
+        </h2>
+        <p style="color: #666; margin-top: 10px;">Live updates from the agricultural world.</p>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <h3 style="color: #d32f2f; font-weight: bold; border-left: 5px solid #d32f2f; padding-left: 15px;">
+            🏛️ Government Schemes
+        </h3>
+    </div>
+
+    <div class="card-grid" style="margin-bottom: 50px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        {% for scheme in schemes %}
+        <div class="card" style="border-top: 3px solid #d32f2f;">
+            <div class="card-body">
+                <div style="font-size: 2rem; margin-bottom: 10px;">{{ scheme.icon }}</div>
+                <h3 style="margin-top: 0; color: #333; font-size: 1.2rem;">{{ scheme.title }}</h3>
+                <p style="color: #666; font-size: 0.95rem;">{{ scheme.description }}</p>
+                
+                <button onclick="showLoginPopup()" class="primary-btn" style="background: white; color: #d32f2f; border: 1px solid #d32f2f; width: auto; margin-top: 15px;">
+                    View Details 🔒
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <h3 style="color: #1976d2; font-weight: bold; border-left: 5px solid #1976d2; padding-left: 15px;">
+            📢 Latest Agriculture News
+        </h3>
+    </div>
+
+    <div class="card-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        {% for news in updates %}
+        <div class="card" style="border-left: 3px solid #1976d2; display: flex; flex-direction: column;">
+            
+            {% if news.urlToImage %}
+            <div style="height: 160px; overflow: hidden; border-radius: 8px 8px 0 0;">
+                <img src="{{ news.urlToImage }}" alt="News" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            {% endif %}
+
+            <div class="card-body" style="flex: 1; display: flex; flex-direction: column;">
+                <h3 style="margin-top: 0; font-size: 1.1rem; line-height: 1.4;">{{ news.title }}</h3>
+                
+                <small style="color: #888; display: block; margin-bottom: 10px;">
+                    📅 {{ news.publishedAt[:10] }}
+                </small>
+                
+                <p style="color: #666; margin-top: 5px; font-size: 0.9rem; flex: 1;">
+                    {{ news.description[:100] }}...
+                </p>
+                
+                <div style="margin-top: 15px;">
+                    <a href="javascript:void(0)" onclick="showLoginPopup()" style="color: #1976d2; font-weight: bold; text-decoration: none;">
+                        Read Full Story 🔒
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: #777;">
+            <p>Fetching latest news...</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="/" style="font-weight: bold; color: #1b5e20; text-decoration: none;">← Back to Home</a>
+    </div>
+
+</div>
+
+<div id="loginModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px);">
+    <div style="background-color: white; margin: 15% auto; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); position: relative; animation: slideDown 0.3s ease-out;">
+        
+        <div style="font-size: 50px; margin-bottom: 10px;">🔒</div>
+        <h2 style="color: #333; margin-bottom: 10px;">Login Required</h2>
+        <p style="color: #666; margin-bottom: 25px;">You need to be logged in to read the full story or apply for this scheme.</p>
+        
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <a href="/login" style="flex: 1;">
+                <button class="primary-btn" style="width: 100%;">Login Now</button>
+            </a>
+            <a href="/register" style="flex: 1;">
+                <button class="primary-btn" style="width: 100%; background: white; color: #2e7d32; border: 1px solid #2e7d32;">Sign Up</button>
+            </a>
+        </div>
+        
+        <button onclick="closeLoginPopup()" style="background: none; border: none; margin-top: 15px; color: #888; cursor: pointer; text-decoration: underline;">
+            Close
+        </button>
+    </div>
+</div>
+
+<script>
+    function showLoginPopup() {
+        document.getElementById('loginModal').style.display = 'block';
+    }
+    
+    function closeLoginPopup() {
+        document.getElementById('loginModal').style.display = 'none';
+    }
+    
+    // Close if clicking outside the box
+    window.onclick = function(event) {
+        var modal = document.getElementById('loginModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+<style>
+    @keyframes slideDown {
+        from { transform: translateY(-30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+</style>
+{% endblock %}

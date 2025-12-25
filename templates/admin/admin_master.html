@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - KrishiDhan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-pro-body">
+
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="admin-sidebar-header">
+            <img src="{{ url_for('static', filename='images/logo_header.png') }}" class="admin-logo-small" alt="Logo">
+        </div>
+
+        <nav class="admin-nav">
+            <a href="/admin_dashboard">
+                <span class="icon">📊</span> Dashboard
+            </a>
+            
+            <div style="padding: 15px 25px 5px; font-size: 0.75rem; text-transform: uppercase; color: #90caf9; font-weight: bold; letter-spacing: 1px;">
+                Management
+            </div>
+
+            <a href="/add_crop">
+                <span class="icon">🌱</span> Add New Crop
+            </a>
+            <a href="/update_price">
+                <span class="icon">💰</span> Market Prices
+            </a>
+            <a href="/manage_farmers">
+                <span class="icon">👥</span> Farmers List
+            </a>
+            <a href="/manage_shop">
+                <span class="icon">🛍️</span> Shop Inventory
+            </a>
+
+            <div style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px;"></div>
+            
+            <a href="/logout" style="color: #ffcc80;">
+                <span class="icon">🚪</span> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        
+        <header class="admin-topbar">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="mobile-menu-btn" onclick="toggleAdminSidebar()">☰</button>
+                <h2 class="page-title">Admin Control Center</h2>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="font-size: 0.9rem; color: #666;">Welcome, <strong>Admin</strong></span>
+                <div id="google_translate_element"></div>
+            </div>
+        </header>
+
+        <div class="container" style="padding: 30px; max-width: 100%;">
+            {% block content %}{% endblock %}
+        </div>
+
+        <footer style="background: transparent; color: #888; padding: 20px; text-align: center; font-size: 0.8rem;">
+            &copy; 2025 KrishiDhan Admin Panel.
+        </footer>
+
+    </main>
+
+    <script>
+        function toggleAdminSidebar() {
+            document.getElementById('adminSidebar').classList.toggle('open');
+        }
+
+        // Highlight Active Link
+        const currentPath = location.pathname;
+        const links = document.querySelectorAll('.admin-nav a');
+        links.forEach(link => {
+            if(link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            }
+        });
+
+        function googleTranslateElementInit() {
+          new google.translate.TranslateElement({
+              pageLanguage: 'en', includedLanguages: 'en,hi,mr',
+              layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+          }, 'google_translate_element');
+        }
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <script>
+              alert("{{ message }}");
+          </script>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+</body>
+</html>

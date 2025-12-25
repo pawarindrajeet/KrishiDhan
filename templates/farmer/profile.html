@@ -1,0 +1,55 @@
+{% extends "farmer/farmer_master.html" %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 40px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    
+    <div style="background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%); padding: 30px; text-align: center; color: white;">
+        
+        <div style="width: 90px; height: 90px; background: white; color: #2e7d32; border-radius: 50%; 
+                    font-size: 40px; font-weight: bold; line-height: 90px; margin: 0 auto; 
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+            {{ user[1][0] }} 
+        </div>
+
+        <h2 style="margin: 15px 0 5px 0; font-weight: 800;">{{ user[1] }}</h2> 
+        <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Farmer Account 🚜</p>
+    </div>
+
+    <div style="padding: 30px;">
+        
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+            <span style="font-size: 1.2rem;">📱</span>
+            <div>
+                <small style="color: #777;">Mobile Number</small><br>
+                <b style="font-size: 1.1rem;">{{ user[2] }}</b>
+            </div>
+        </div>
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+        
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+            <span style="font-size: 1.2rem;">📍</span>
+            <div>
+                <small style="color: #777;">District</small><br>
+                <b style="font-size: 1.1rem;">{{ user[4] }}</b>
+            </div>
+        </div>
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+        
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+            <span style="font-size: 1.2rem;">🌍</span>
+            <div>
+                <small style="color: #777;">State</small><br>
+                <b style="font-size: 1.1rem;">{{ user[3] }}</b>
+            </div>
+        </div>
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+
+        <div style="text-align: center; margin-top: 25px;">
+            <button style="background-color: #ff9800; color: white; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                ✏️ Edit Profile
+            </button>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

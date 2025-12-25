@@ -1,0 +1,74 @@
+{% extends "admin/admin_master.html" %}
+
+{% block content %}
+
+<div style="text-align: center; margin-bottom: 40px;">
+    <h1 style="color: #1565C0; font-weight: 800; margin-bottom: 10px;">Admin Control Center</h1>
+    <p style="color: #666; font-size: 1rem;">Manage crops, users, and market data efficiently from one place.</p>
+</div>
+
+<div class="card-grid">
+    
+    <div class="card">
+        <div style="height: 120px; background: #e3f2fd; display: flex; align-items: center; justify-content: center; font-size: 50px;">
+            🌱
+        </div>
+        <div class="card-body" style="text-align: center;">
+            <h3 style="color: #333; margin-bottom: 10px;">Add New Crop</h3>
+            <p style="color: #777; font-size: 0.9rem; margin-bottom: 20px;">
+                Upload crop details, soil requirements, and images.
+            </p>
+            <a href="/add_crop" style="text-decoration: none;">
+                <button class="admin-btn" style="width: 100%;">Go to Add Crop</button>
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div style="height: 120px; background: #e8f5e9; display: flex; align-items: center; justify-content: center; font-size: 50px;">
+            👥
+        </div>
+        <div class="card-body" style="text-align: center;">
+            <h3 style="color: #333; margin-bottom: 10px;">Manage Farmers</h3>
+            <p style="color: #777; font-size: 0.9rem; margin-bottom: 20px;">
+                View registered farmers and contact details.
+            </p>
+            <a href="/manage_farmers" style="text-decoration: none;">
+                <button class="admin-btn" style="width: 100%;">View List</button>
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div style="height: 120px; background: #fff3e0; display: flex; align-items: center; justify-content: center; font-size: 50px;">
+            💰
+        </div>
+        <div class="card-body" style="text-align: center;">
+            <h3 style="color: #333; margin-bottom: 10px;">Market Prices</h3>
+            <p style="color: #777; font-size: 0.9rem; margin-bottom: 20px;">
+                Update daily Mandi prices for different districts.
+            </p>
+            <a href="/update_price" style="text-decoration: none;">
+                <button class="admin-btn" style="width: 100%;">Update Prices</button>
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div style="height: 120px; background: #f3e5f5; display: flex; align-items: center; justify-content: center; font-size: 50px;">
+            🛍️
+        </div>
+        <div class="card-body" style="text-align: center;">
+            <h3 style="color: #333; margin-bottom: 10px;">Manage Shop</h3>
+            <p style="color: #777; font-size: 0.9rem; margin-bottom: 20px;">
+                Add or remove seeds, fertilizers, and tools.
+            </p>
+            <a href="/manage_shop" style="text-decoration: none;">
+                <button class="admin-btn" style="width: 100%;">Inventory</button>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

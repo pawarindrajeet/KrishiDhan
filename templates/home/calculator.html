@@ -1,0 +1,90 @@
+{% extends "home/home_master.html" %}
+
+{% block content %}
+
+<div class="centered-wrapper">
+    
+    <div class="card" style="width: 100%; max-width: 500px; border-top: 5px solid #1565C0; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+        <div class="card-body" style="padding: 30px;">
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <h2 style="color: #1565C0; font-weight: 800;">Land Calculator 📐</h2>
+                <p style="color: #666;">Convert farm area units instantly.</p>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <div style="flex: 1;">
+                    <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">Value</label>
+                    <input type="number" id="calcInput" placeholder="Enter Area" oninput="calculateLand()"
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1.1rem;">
+                </div>
+                <div style="flex: 1;">
+                    <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">Unit</label>
+                    <select id="unitSelect" onchange="calculateLand()"
+                            style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; background: white;">
+                        <option value="acre">Acre</option>
+                        <option value="hectare">Hectare</option>
+                        <option value="guntha">Guntha</option>
+                        <option value="sqft">Sq. Feet</option>
+                        <option value="sqmeter">Sq. Meter</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="background: #f0f4f8; padding: 20px; border-radius: 10px; border: 1px solid #d1e3f6;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+                    <span style="color: #555;">Acres:</span>
+                    <span id="res-acre" style="font-weight: bold; color: #333;">0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+                    <span style="color: #555;">Hectares:</span>
+                    <span id="res-hectare" style="font-weight: bold; color: #333;">0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
+                    <span style="color: #555;">Guntha:</span>
+                    <span id="res-guntha" style="font-weight: bold; color: #333;">0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="color: #555;">Sq. Feet:</span>
+                    <span id="res-sqft" style="font-weight: bold; color: #333;">0</span>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 25px;">
+                <a href="/" style="color: #1565C0; font-weight: bold; text-decoration: none;">← Back to Home</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculateLand() {
+        let val = parseFloat(document.getElementById('calcInput').value);
+        let unit = document.getElementById('unitSelect').value;
+
+        if (isNaN(val) || val < 0) {
+            document.getElementById('res-acre').innerText = "0";
+            document.getElementById('res-hectare').innerText = "0";
+            document.getElementById('res-guntha').innerText = "0";
+            document.getElementById('res-sqft').innerText = "0";
+            return;
+        }
+
+        // 1. Convert everything to SQ FEET first (Base Unit)
+        let sqft = 0;
+        if (unit === 'acre') sqft = val * 43560;
+        else if (unit === 'hectare') sqft = val * 107639;
+        else if (unit === 'guntha') sqft = val * 1089;
+        else if (unit === 'sqft') sqft = val;
+        else if (unit === 'sqmeter') sqft = val * 10.764;
+
+        // 2. Convert SQ FEET to target units
+        document.getElementById('res-acre').innerText = (sqft / 43560).toFixed(4);
+        document.getElementById('res-hectare').innerText = (sqft / 107639).toFixed(4);
+        document.getElementById('res-guntha').innerText = (sqft / 1089).toFixed(2);
+        document.getElementById('res-sqft').innerText = sqft.toFixed(2);
+    }
+</script>
+
+{% endblock %}

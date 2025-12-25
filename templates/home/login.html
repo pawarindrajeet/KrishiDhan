@@ -1,0 +1,55 @@
+{% extends "home/home_master.html" %}
+
+{% block content %}
+
+<div class="centered-wrapper">
+    
+    <div class="card" style="width: 100%; max-width: 400px; border-top: 5px solid #2e7d32; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+        <div class="card-body" style="padding: 40px;">
+            
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2 style="color: #2e7d32; font-weight: 800;">Farmer Login 🔐</h2>
+                <p style="color: #666;">Welcome back! Please access your account.</p>
+            </div>
+
+            <form action="/login" method="POST">
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="font-weight: 600; color: #333; display: block; margin-bottom: 8px;">Farmer ID / Mobile</label>
+                    <input type="text" name="identifier" required placeholder="e.g. 9876543210" 
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label style="font-weight: 600; color: #333; display: block; margin-bottom: 8px;">Password</label>
+                    <input type="password" name="password" required placeholder="Enter Password" 
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                </div>
+
+                <button type="submit" class="primary-btn" style="width: 100%; font-size: 1.1rem; padding: 12px; border-radius: 8px;">
+                    Secure Login 🚀
+                </button>
+
+            </form>
+
+            <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee;">
+                <p style="color: #555;">New to KrishiDhan?</p>
+                <a href="/register" style="color: #2e7d32; font-weight: bold; text-decoration: none;">
+                    Create New Account
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <script>alert("{{ message }}");</script>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{% endblock %}

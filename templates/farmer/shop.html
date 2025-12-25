@@ -1,0 +1,66 @@
+{% extends "farmer/farmer_master.html" %}
+
+{% block content %}
+<div class="container" style="padding-bottom: 50px;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h2 style="color: #1b5e20; font-weight: 700;">🛒 Farm Shop</h2>
+        
+        <div>
+            <button class="primary-btn" style="padding: 6px 15px; font-size: 0.9rem;">All</button>
+            <button class="primary-btn" style="padding: 6px 15px; font-size: 0.9rem; background: #e0e0e0; color: #333;">Seeds</button>
+            <button class="primary-btn" style="padding: 6px 15px; font-size: 0.9rem; background: #e0e0e0; color: #333;">Fertilizers</button>
+        </div>
+    </div>
+
+    <div class="card-grid">
+        {% for product in products %}
+        <div class="card feature-card" style="text-align: left; transition: transform 0.2s;">
+            
+            <div style="height: 180px; background: #f9f9f9; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px;">
+                <img src="{{ url_for('static', filename='images/products/' + (product.image_url or 'default_product.png')) }}" 
+                     onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/products/default_product.png') }}'"
+                     alt="{{ product.name }}" 
+                     style="max-height: 100%; max-width: 100%; object-fit: contain;">
+            </div>
+
+            <div style="padding: 15px 5px;">
+                <div style="font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px;">{{ product.category }}</div>
+                <h3 style="margin: 5px 0; font-size: 1.1rem; color: #333;">{{ product.name }}</h3>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                    <span style="font-size: 1.3rem; font-weight: bold; color: #2e7d32;">₹{{ product.price }}</span>
+                    
+                    {% if product.stock > 0 %}
+                        <span style="font-size: 0.8rem; color: #1b5e20; background: #e8f5e9; padding: 2px 8px; border-radius: 4px;">In Stock: {{ product.stock }}</span>
+                    {% else %}
+                        <span style="font-size: 0.8rem; color: #c62828; background: #ffebee; padding: 2px 8px; border-radius: 4px;">Out of Stock</span>
+                    {% endif %}
+                </div>
+
+                <div style="margin-top: 15px;">
+                    {% if product.stock > 0 %}
+                        <form action="/add_to_cart/{{ product.id }}" method="POST" style="display: flex; gap: 10px;">
+                            
+                            <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" 
+                                   style="width: 60px; padding: 8px; border: 1px solid #ccc; border-radius: 5px; text-align: center;">
+
+                            <button type="submit" class="primary-btn" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span>🛒</span> Add to Cart
+                            </button>
+                        </form>
+                    {% else %}
+                        <button class="primary-btn" disabled style="width: 100%; background: #ccc; cursor: not-allowed;">Sold Out</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #777;">
+                <h3>Store is Empty</h3>
+                <p>No products available right now.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
