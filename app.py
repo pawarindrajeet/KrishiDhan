@@ -27,16 +27,14 @@ db = SQLAlchemy(app) # Initialize ORM
 # These link to your existing PostgreSQL tables automatically
 
 class Product(db.Model):
-    __tablename__ = 'products' # Links to your existing table
+    __tablename__ = 'products' 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(50), nullable=False)
     price = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
-    image = db.Column(db.String(100), nullable=True) # Matches your DB column 'image_url' or 'image'? 
-    # Note: In your raw SQL you used 'image_url'. I will map it below.
-    image_url = db.Column('image_url', db.String(100), nullable=True) 
-
+    image_url = db.Column(db.String(100), nullable=True) # ✅ KEEP THIS LINE
+    
 class Order(db.Model):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)

@@ -17,11 +17,10 @@
         {% for product in products %}
         <div class="card feature-card" style="text-align: left; transition: transform 0.2s;">
             
-            <div style="height: 180px; background: #f9f9f9; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px;">
-                <img src="{{ url_for('static', filename='images/products/' + (product.image_url or 'default_product.png')) }}" 
-                     onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/products/default_product.png') }}'"
-                     alt="{{ product.name }}" 
-                     style="max-height: 100%; max-width: 100%; object-fit: contain;">
+       <img src="{{ url_for('static', filename='images/products/' ~ (product.image_url or 'default_product.png')) }}" 
+     onerror="this.onerror=null; this.src='/static/images/products/default_product.png';"
+     alt="{{ product.name }}" 
+     style="max-height: 100%; max-width: 100%; object-fit: contain;">
             </div>
 
             <div style="padding: 15px 5px;">
