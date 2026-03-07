@@ -206,5 +206,3 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:YOUR_PASSWORD@loc
 This project is proprietary and intended for educational and portfolio purposes.
 
 ---
-
-Would you like me to help you format this into a `.md` file, or should we jump back into VS Code and tackle one of those "Future Enhancements" together?
