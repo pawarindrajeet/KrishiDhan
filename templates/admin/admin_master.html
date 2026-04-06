@@ -11,19 +11,35 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <style>
+        /* --- 1. ENTERPRISE COLOR PALETTE --- */
         :root {
-            --sidebar-width: 260px;
-            --admin-bg: #1e1e2f; /* Deep authoritative slate */
-            --admin-hover: #27293d;
+            --sidebar-width: 280px;
+            --admin-bg: #0f172a; /* Deep Slate (Very modern dark) */
+            --admin-hover: rgba(255, 255, 255, 0.05);
+            --app-bg: #f8fafc; /* Softer, cooler off-white for the main background */
+            --primary-accent: #3b82f6; /* Modern crisp blue */
         }
         
         body { 
             font-family: 'Poppins', sans-serif; 
-            background-color: #f4f5f7; 
+            background-color: var(--app-bg); 
             overflow-x: hidden;
+            color: #334155;
         }
 
-        /* --- Sidebar Layout --- */
+        /* --- 2. PREMIUM CARD STYLING (Soft Shadows & Hover) --- */
+        .card {
+            border: none !important;
+            border-radius: 1.25rem !important; /* 20px - beautifully rounded */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hover-lift:hover { 
+            transform: translateY(-6px); 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important; 
+        }
+
+        /* --- 3. THE MODERN SIDEBAR --- */
         #wrapper { display: flex; width: 100%; align-items: stretch; }
         
         #sidebar {
@@ -32,84 +48,95 @@
             background: var(--admin-bg);
             color: #fff;
             min-height: 100vh;
-            transition: all 0.3s ease-in-out;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1040;
             display: flex;
             flex-direction: column;
+            border-right: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Sidebar Links */
         .sidebar-heading {
-            padding: 1.5rem 1.25rem;
-            font-size: 1.2rem;
+            padding: 2rem 1.5rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: #fff;
+            letter-spacing: -0.5px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
+        
         .nav-category {
-            padding: 1.5rem 1.5rem 0.5rem;
-            font-size: 0.7rem;
+            padding: 1.5rem 1.5rem 0.75rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #8b92a9;
+            letter-spacing: 1.5px;
+            color: #64748b;
             font-weight: 700;
         }
+        
+        /* Pill-Shaped Active Links */
         .sidebar-link {
-            padding: 0.8rem 1.5rem;
-            color: #bac0d2;
+            margin: 0.2rem 1rem;
+            padding: 0.85rem 1.2rem;
+            border-radius: 12px;
+            color: #94a3b8;
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             font-weight: 500;
             transition: all 0.2s;
-            border-left: 4px solid transparent;
         }
-        .sidebar-link:hover, .sidebar-link.active {
-            color: #fff;
+        .sidebar-link:hover {
+            color: #f8fafc;
             background: var(--admin-hover);
-            border-left-color: #0d6efd;
+            transform: translateX(5px); /* Slick little slide on hover */
         }
-        .sidebar-link i { font-size: 1.2rem; }
+        .sidebar-link.active {
+            color: #fff;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        .sidebar-link i { font-size: 1.25rem; }
         
-        /* Logout Button specific styling */
-        .logout-link { color: #ff6b6b; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05); }
-        .logout-link:hover { background: rgba(220, 53, 69, 0.1); color: #ff8787; border-left-color: #dc3545; }
+        /* Logout Button */
+        .logout-link { color: #f87171; margin-top: auto; margin-bottom: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;}
+        .logout-link:hover { background: rgba(239, 68, 68, 0.1); color: #fca5a5; }
 
-        /* --- Main Content Layout --- */
+        /* --- 4. SLEEK TOPBAR --- */
         #page-content-wrapper {
             min-width: 100vw;
             width: 100%;
-            transition: all 0.3s ease-in-out;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
         }
 
         .admin-topbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px); /* Glassmorphism effect */
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
         }
 
-        /* Mobile Responsive Toggles */
+        /* Buttons & Inputs */
+        .btn { border-radius: 10px; font-weight: 600; letter-spacing: 0.3px; }
+        .btn-outline-primary { border-color: #e2e8f0; color: #3b82f6; }
+        .btn-outline-primary:hover { background-color: #f8fafc; border-color: #3b82f6; color: #2563eb; }
+
+        /* --- 5. RESPONSIVE LOGIC --- */
         @media (min-width: 768px) {
             #page-content-wrapper { min-width: 0; width: 100%; }
             #sidebar.toggled { margin-left: calc(var(--sidebar-width) * -1); }
         }
         @media (max-width: 767.98px) {
             #sidebar { margin-left: calc(var(--sidebar-width) * -1); position: fixed; height: 100vh; overflow-y: auto; }
-            #sidebar.toggled { margin-left: 0; box-shadow: 5px 0 15px rgba(0,0,0,0.2); }
+            #sidebar.toggled { margin-left: 0; box-shadow: 10px 0 25px rgba(0,0,0,0.5); }
         }
 
-        /* Google Translate Widget Fixes */
-        .goog-te-gadget-simple { 
-            border: 1px solid #dee2e6 !important; 
-            border-radius: 8px !important; 
-            padding: 4px 8px !important; 
-            font-family: 'Poppins', sans-serif !important; 
-            font-size: 0.85rem !important;
-        }
+        /* Google Translate fix */
+        .goog-te-gadget-simple { border: 1px solid #e2e8f0 !important; border-radius: 8px !important; padding: 6px 10px !important; font-family: 'Poppins', sans-serif !important; font-size: 0.85rem !important;}
         .goog-te-banner-frame { display: none !important; }
         body { top: 0 !important; }
     </style>
@@ -141,13 +168,11 @@
             </div>
 
             <div class="list-group list-group-flush mt-3 flex-grow-1">
-                
                 <a href="/admin_dashboard" class="sidebar-link">
                     <i class="bi bi-speedometer2"></i> Dashboard
                 </a>
                 
                 <div class="nav-category">Platform Management</div>
-                
                 <a href="/add_crop" class="sidebar-link">
                     <i class="bi bi-flower1"></i> Add Crop Info
                 </a>
@@ -157,28 +182,29 @@
                 <a href="/manage_farmers" class="sidebar-link">
                     <i class="bi bi-people-fill"></i> Farmers List
                 </a>
+                
                 <a href="/manage_shop" class="sidebar-link">
-                    <i class="bi bi-box-seam"></i> Shop Inventory
+                    <i class="bi bi-shop"></i> Manage Shop
+                </a>
+                <a href="/admin_inventory" class="sidebar-link">
+                    <i class="bi bi-boxes"></i> Live Inventory
                 </a>
 
-                <a href="/logout" class="sidebar-link logout-link pb-4 pt-3 mt-auto">
+                <a href="/logout" class="sidebar-link logout-link">
                     <i class="bi bi-box-arrow-left"></i> Secure Logout
                 </a>
             </div>
         </aside>
 
         <main id="page-content-wrapper">
-            
             <nav class="navbar navbar-expand-lg admin-topbar py-3 shadow-sm px-3 px-md-4 sticky-top">
                 <div class="d-flex align-items-center justify-content-between w-100">
-                    
                     <button class="btn btn-light border-0 shadow-sm rounded-circle d-flex align-items-center justify-content-center" id="menu-toggle" style="width: 40px; height: 40px;">
                         <i class="bi bi-list fs-4 text-dark"></i>
                     </button>
                     
                     <div class="d-flex align-items-center gap-3">
                         <div id="google_translate_element" class="d-none d-sm-block"></div>
-                        
                         <div class="d-flex align-items-center gap-2 border-start ps-3 ms-1">
                             <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 35px; height: 35px;">
                                 A
@@ -186,7 +212,6 @@
                             <span class="fw-bold text-dark d-none d-md-block">Admin</span>
                         </div>
                     </div>
-
                 </div>
             </nav>
 
@@ -197,39 +222,28 @@
             <footer class="mt-auto py-3 text-center text-muted small border-top">
                 &copy; <script>document.write(new Date().getFullYear())</script> KrishiDhan Admin Control Panel. All rights reserved.
             </footer>
-
         </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-        // Toggle Sidebar Functionality
         document.getElementById("menu-toggle").addEventListener("click", function(e) {
             e.preventDefault();
             document.getElementById("sidebar").classList.toggle("toggled");
         });
 
-        // Automatically highlight the active sidebar link based on current URL
         document.addEventListener("DOMContentLoaded", function() {
             const currentPath = window.location.pathname;
             const navLinks = document.querySelectorAll('.sidebar-link');
-            
             navLinks.forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
-                    link.classList.add('active');
-                }
+                if (link.getAttribute('href') === currentPath) link.classList.add('active');
             });
 
-            // Initialize Bootstrap Toasts
             var toastElList = [].slice.call(document.querySelectorAll('.toast'))
-            var toastList = toastElList.map(function (toastEl) {
-                return new bootstrap.Toast(toastEl)
-            });
+            var toastList = toastElList.map(function (toastEl) { return new bootstrap.Toast(toastEl) });
             toastList.forEach(toast => toast.show());
         });
 
-        // Google Translate Initialization
         function googleTranslateElementInit() {
           new google.translate.TranslateElement({
               pageLanguage: 'en', includedLanguages: 'en,hi,mr,gu,pa',

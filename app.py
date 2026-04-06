@@ -385,9 +385,12 @@ def analytics():
         if month not in months_set:
             months_set.append(month)
             
-        if crop_name.lower() == 'wheat': wheat_prices.append(price)
-        elif crop_name.lower() == 'rice': rice_prices.append(price)
-        elif crop_name.lower() == 'cotton': cotton_prices.append(price)
+        # FIX: Convert the Decimal price to a standard float!
+        safe_price = float(price)
+            
+        if crop_name.lower() == 'wheat': wheat_prices.append(safe_price)
+        elif crop_name.lower() == 'rice': rice_prices.append(safe_price)
+        elif crop_name.lower() == 'cotton': cotton_prices.append(safe_price)
 
     # 3. Fallback to dummy data if database is empty (to prevent broken charts during demo)
     if not months_set:

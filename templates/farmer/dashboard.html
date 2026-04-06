@@ -2,70 +2,121 @@
 
 {% block content %}
 <style>
-    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
-    .icon-circle { width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-bottom: 15px; }
+    /* --- Premium Card Hover Effects --- */
+    .dashboard-card { 
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        border-radius: 1.25rem !important; 
+        border: none !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+    }
+    .dashboard-card:hover { 
+        transform: translateY(-8px); 
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important; 
+    }
+
+    /* --- Modern Squircle Icons --- */
+    .icon-wrapper { 
+        width: 72px; 
+        height: 72px; 
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center; 
+        border-radius: 20px; /* Modern squircle shape */
+        margin-bottom: 1.5rem; 
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dashboard-card:hover .icon-wrapper { 
+        transform: scale(1.1) rotate(6deg); /* Playful tilt on hover */
+    }
+
+    /* --- Premium Weather Widget --- */
+    .weather-card {
+        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+        border-radius: 1.5rem;
+        border: none;
+        overflow: hidden;
+        position: relative;
+    }
+    /* Abstract background circles for depth */
+    .weather-card::before {
+        content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px;
+        background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+        border-radius: 50%; pointer-events: none;
+    }
+    /* Glassmorphism mini-cards */
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 1rem;
+        padding: 1rem 1.5rem;
+    }
 </style>
 
-<div class="container-fluid pb-5">
+<div class="container-fluid pb-5 px-lg-4">
 
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5 mt-2 gap-3">
         <div>
-            <h2 class="text-success fw-bold mb-0">Welcome back, {{ user[0] }}! 🚜</h2>
-            <p class="text-muted mb-0 fs-5">Here is your farm overview and daily updates.</p>
+            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-bold mb-3 shadow-sm border border-success-subtle">
+                <i class="bi bi-broadcast me-1"></i> Farm Status: Active
+            </span>
+            <h2 class="text-dark fw-bolder mb-1" style="letter-spacing: -0.5px;">Welcome back, {{ user[0] }}! 👋</h2>
+            <p class="text-muted mb-0 fs-5">Here is your daily farm overview and market intelligence.</p>
         </div>
-        <div class="text-md-end d-none d-md-block">
-            <h5 class="fw-bold mb-0 text-secondary" id="current-date"></h5>
-            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 mt-1">Farm Status: Active</span>
+        <div class="text-md-end bg-white px-4 py-3 rounded-4 shadow-sm">
+            <p class="text-muted mb-1 small fw-bold text-uppercase tracking-wide">Today's Date</p>
+            <h5 class="fw-bold mb-0 text-primary" id="current-date"></h5>
         </div>
     </div>
 
     {% if weather %}
-    <div class="card border-0 shadow-sm rounded-4 mb-5 text-white overflow-hidden" style="background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);">
-        <div class="card-body p-4 p-md-5">
+    <div class="card weather-card shadow-lg mb-5 text-white">
+        <div class="card-body p-4 p-md-5 position-relative z-1">
             <div class="row align-items-center">
-                <div class="col-md-8 text-center text-md-start">
-                    <h5 class="opacity-75 mb-1 text-uppercase tracking-wide" style="letter-spacing: 1px;">Current Weather In</h5>
-                    <h2 class="display-6 fw-bold mb-4"><i class="bi bi-geo-alt-fill text-danger"></i> {{ weather.name }}</h2>
+                
+                <div class="col-lg-7 text-center text-md-start">
+                    <div class="d-inline-flex align-items-center gap-2 bg-white bg-opacity-25 rounded-pill px-3 py-1 mb-3">
+                        <i class="bi bi-geo-alt-fill text-white"></i>
+                        <span class="fw-bold tracking-wide text-uppercase small">{{ weather.name }}</span>
+                    </div>
                     
-                    <div class="d-flex flex-column flex-md-row align-items-center gap-3 gap-md-4 mb-4 mb-md-0">
-                        <h1 class="fw-bold mb-0" style="font-size: 4.5rem; line-height: 1;">{{ weather.main.temp }}°C</h1>
-                        <div class="border-start border-white border-opacity-50 ps-md-4 d-none d-md-block">
-                            <p class="fs-4 text-capitalize fw-semibold mb-0">{{ weather.weather[0].description }}</p>
-                            <p class="mb-0 opacity-75 fs-5">Feels like {{ weather.main.feels_like }}°C</p>
+                    <div class="d-flex flex-column flex-md-row align-items-center gap-4 mb-4 mb-lg-0">
+                        <h1 class="fw-bolder mb-0" style="font-size: 5rem; letter-spacing: -2px;">{{ weather.main.temp }}°</h1>
+                        <div class="border-start border-white border-opacity-50 ps-md-4 d-none d-md-block text-start">
+                            <p class="fs-3 text-capitalize fw-semibold mb-1">{{ weather.weather[0].description }}</p>
+                            <p class="mb-0 text-white-50 fs-5 fw-medium">Feels like {{ weather.main.feels_like }}°C</p>
                         </div>
                         <div class="d-md-none text-center">
                             <p class="fs-4 text-capitalize fw-semibold mb-0">{{ weather.weather[0].description }}</p>
-                            <p class="mb-0 opacity-75">Feels like {{ weather.main.feels_like }}°C</p>
+                            <p class="mb-0 text-white-50">Feels like {{ weather.main.feels_like }}°C</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 text-center text-md-end mt-3 mt-md-0">
-                    <img src="https://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@4x.png" alt="Weather Icon" class="img-fluid" style="max-height: 180px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.4));">
-                </div>
-            </div>
-            
-            <hr class="border-white border-opacity-25 my-4">
-            
-            <div class="row text-center text-md-start g-3">
-                <div class="col-6 col-md-4">
-                    <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2">
-                        <i class="bi bi-droplet-half fs-3 opacity-75"></i>
-                        <div>
-                            <small class="opacity-75 text-uppercase fw-bold d-block" style="font-size: 0.75rem;">Humidity</small>
-                            <h5 class="mb-0 fw-bold">{{ weather.main.humidity }}%</h5>
+
+                <div class="col-lg-5">
+                    <div class="d-flex flex-column align-items-center align-items-lg-end">
+                        <img src="https://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@4x.png" alt="Weather Icon" class="img-fluid mb-2" style="max-height: 160px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));">
+                        
+                        <div class="d-flex gap-3 w-100 justify-content-center justify-content-lg-end">
+                            <div class="glass-panel d-flex align-items-center gap-3">
+                                <i class="bi bi-droplet-half fs-3 text-info"></i>
+                                <div class="text-start">
+                                    <small class="text-white-50 text-uppercase fw-bold d-block" style="font-size: 0.7rem;">Humidity</small>
+                                    <h5 class="mb-0 fw-bold">{{ weather.main.humidity }}%</h5>
+                                </div>
+                            </div>
+                            <div class="glass-panel d-flex align-items-center gap-3">
+                                <i class="bi bi-wind fs-3 text-light"></i>
+                                <div class="text-start">
+                                    <small class="text-white-50 text-uppercase fw-bold d-block" style="font-size: 0.7rem;">Wind</small>
+                                    <h5 class="mb-0 fw-bold">{{ weather.wind.speed }} <span class="fs-6 fw-normal">m/s</span></h5>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-md-4">
-                    <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2">
-                        <i class="bi bi-wind fs-3 opacity-75"></i>
-                        <div>
-                            <small class="opacity-75 text-uppercase fw-bold d-block" style="font-size: 0.75rem;">Wind Speed</small>
-                            <h5 class="mb-0 fw-bold">{{ weather.wind.speed }} m/s</h5>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
@@ -79,87 +130,87 @@
     </div>
     {% endif %}
 
-    <div class="d-flex align-items-center mb-4">
-        <h3 class="fw-bold text-success mb-0 me-3">Your Services</h3>
-        <div class="flex-grow-1 border-bottom border-2 border-success border-opacity-25"></div>
+    <div class="d-flex align-items-center mb-4 mt-2">
+        <h4 class="fw-bold text-dark mb-0 me-3">Smart Services</h4>
+        <div class="flex-grow-1 border-bottom border-secondary border-opacity-25"></div>
     </div>
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
         
         <div class="col">
-            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center pb-2">
-                <div class="card-body pt-4">
-                    <div class="icon-circle bg-primary bg-opacity-10 text-primary">
-                        <i class="bi bi-robot" style="font-size: 2.5rem;"></i>
+            <div class="card dashboard-card h-100 text-center pb-2">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="icon-wrapper bg-primary bg-opacity-10 text-primary">
+                        <i class="bi bi-robot fs-1"></i>
                     </div>
-                    <h5 class="fw-bold text-dark">AI Recommender</h5>
-                    <p class="text-muted small mb-4 px-2">Get scientific crop advice based on soil N-P-K values and local climate.</p>
-                    <a href="/recommend" class="btn btn-outline-primary fw-bold rounded-pill px-4 w-75">Get Advice</a>
+                    <h5 class="fw-bold text-dark mb-2">AI Recommender</h5>
+                    <p class="text-muted small mb-4 flex-grow-1 px-2">Get scientific crop advice based on soil N-P-K values and local climate.</p>
+                    <a href="/recommend" class="btn btn-outline-primary fw-bold rounded-pill w-100 py-2">Get Advice</a>
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center pb-2">
-                <div class="card-body pt-4">
-                    <div class="icon-circle bg-danger bg-opacity-10 text-danger">
-                        <i class="bi bi-prescription2" style="font-size: 2.5rem;"></i>
+            <div class="card dashboard-card h-100 text-center pb-2">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="icon-wrapper bg-danger bg-opacity-10 text-danger">
+                        <i class="bi bi-prescription2 fs-1"></i>
                     </div>
-                    <h5 class="fw-bold text-dark">Plant Doctor</h5>
-                    <p class="text-muted small mb-4 px-2">Upload a photo of a leaf to detect diseases and get instant cures.</p>
-                    <a href="/plant_doctor" class="btn btn-outline-danger fw-bold rounded-pill px-4 w-75">Check Health</a>
+                    <h5 class="fw-bold text-dark mb-2">Plant Doctor</h5>
+                    <p class="text-muted small mb-4 flex-grow-1 px-2">Upload a photo of a leaf to detect diseases and get instant cures.</p>
+                    <a href="/plant_doctor" class="btn btn-outline-danger fw-bold rounded-pill w-100 py-2">Check Health</a>
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center pb-2">
-                <div class="card-body pt-4">
-                    <div class="icon-circle bg-warning bg-opacity-10 text-warning" style="color: #f57c00 !important;">
-                        <i class="bi bi-shop" style="font-size: 2.5rem; color: #f57c00;"></i>
+            <div class="card dashboard-card h-100 text-center pb-2">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="icon-wrapper bg-warning bg-opacity-10 text-warning" style="color: #f59e0b !important;">
+                        <i class="bi bi-shop fs-1"></i>
                     </div>
-                    <h5 class="fw-bold text-dark">Agri Shop</h5>
-                    <p class="text-muted small mb-4 px-2">Buy high-quality seeds, organic fertilizers, and farming tools directly.</p>
-                    <a href="/shop" class="btn btn-outline-warning fw-bold rounded-pill px-4 w-75" style="color: #f57c00; border-color: #f57c00;">Go to Shop</a>
+                    <h5 class="fw-bold text-dark mb-2">Agri Shop</h5>
+                    <p class="text-muted small mb-4 flex-grow-1 px-2">Buy high-quality seeds, organic fertilizers, and farming tools directly.</p>
+                    <a href="/shop" class="btn btn-outline-warning fw-bold text-dark border-warning-subtle rounded-pill w-100 py-2">Go to Shop</a>
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center pb-2">
-                <div class="card-body pt-4">
-                    <div class="icon-circle" style="background-color: #f3e5f5; color: #7b1fa2;">
-                        <i class="bi bi-flower1" style="font-size: 2.5rem;"></i>
+            <div class="card dashboard-card h-100 text-center pb-2">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="icon-wrapper bg-success bg-opacity-10 text-success">
+                        <i class="bi bi-flower1 fs-1"></i>
                     </div>
-                    <h5 class="fw-bold text-dark">My Farm</h5>
-                    <p class="text-muted small mb-4 px-2">Track your currently sown crops, manage schedules, and calculate yields.</p>
-                    <a href="/my_crops" class="btn fw-bold rounded-pill px-4 w-75" style="border-color: #7b1fa2; color: #7b1fa2;">Manage Farm</a>
+                    <h5 class="fw-bold text-dark mb-2">My Farm</h5>
+                    <p class="text-muted small mb-4 flex-grow-1 px-2">Track your currently sown crops, manage schedules, and calculate yields.</p>
+                    <a href="/my_crops" class="btn btn-outline-success fw-bold rounded-pill w-100 py-2">Manage Farm</a>
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center pb-2">
-                <div class="card-body pt-4">
-                    <div class="icon-circle bg-info bg-opacity-10 text-info">
-                        <i class="bi bi-calculator" style="font-size: 2.5rem;"></i>
+            <div class="card dashboard-card h-100 text-center pb-2">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="icon-wrapper bg-info bg-opacity-10 text-info">
+                        <i class="bi bi-calculator fs-1"></i>
                     </div>
-                    <h5 class="fw-bold text-dark">Land Calculator</h5>
-                    <p class="text-muted small mb-4 px-2">Instantly convert land measurements between Guntha, Acre, and Hectare.</p>
-                    <a href="/calculator" class="btn btn-outline-info fw-bold rounded-pill px-4 w-75 text-dark">Calculate</a>
+                    <h5 class="fw-bold text-dark mb-2">Land Calculator</h5>
+                    <p class="text-muted small mb-4 flex-grow-1 px-2">Instantly convert land measurements between Guntha, Acre, and Hectare.</p>
+                    <a href="/calculator" class="btn btn-outline-info fw-bold text-dark border-info-subtle rounded-pill w-100 py-2">Calculate</a>
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center pb-2">
-                <div class="card-body pt-4">
-                    <div class="icon-circle bg-success bg-opacity-10 text-success">
-                        <i class="bi bi-book" style="font-size: 2.5rem;"></i>
+            <div class="card dashboard-card h-100 text-center pb-2">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="icon-wrapper" style="background-color: #f3e8ff; color: #9333ea;">
+                        <i class="bi bi-book fs-1"></i>
                     </div>
-                    <h5 class="fw-bold text-dark">Crop Info Library</h5>
-                    <p class="text-muted small mb-4 px-2">Read comprehensive guides about soil types, seasons, and farming tips.</p>
-                    <a href="/crops" class="btn btn-outline-success fw-bold rounded-pill px-4 w-75">Read More</a>
+                    <h5 class="fw-bold text-dark mb-2">Crop Info Library</h5>
+                    <p class="text-muted small mb-4 flex-grow-1 px-2">Read comprehensive guides about soil types, seasons, and farming tips.</p>
+                    <a href="/crops" class="btn fw-bold rounded-pill w-100 py-2" style="color: #9333ea; border: 1px solid #d8b4fe;">Read More</a>
                 </div>
             </div>
         </div>

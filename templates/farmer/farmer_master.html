@@ -11,50 +11,107 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <style>
+        /* --- 1. ENTERPRISE COLOR PALETTE --- */
+        :root {
+            --sidebar-width: 280px;
+            --sidebar-bg: #0f172a; /* Deep Slate */
+            --sidebar-hover: rgba(255, 255, 255, 0.05);
+            --primary-green: #16a34a; /* Vibrant Agri-Green */
+        }
+        
         body { font-family: 'Poppins', sans-serif; overflow-x: hidden; }
         
-        /* Sidebar Styling */
+        /* --- 2. THE MODERN SIDEBAR --- */
         .kd-sidebar {
-            width: 280px;
+            width: var(--sidebar-width);
             height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
             overflow-y: auto;
             z-index: 1040;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--sidebar-bg);
+            color: #fff;
+            border-right: 1px solid rgba(255,255,255,0.05) !important;
         }
+
+        /* Sidebar Section Headers */
+        .sidebar-heading {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #64748b;
+            font-weight: 700;
+            padding-left: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Pill-Shaped Active Links */
         .kd-sidebar .nav-link {
-            color: var(--bs-body-color);
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin-bottom: 5px;
+            color: #94a3b8;
+            padding: 0.85rem 1.2rem;
+            border-radius: 12px;
+            margin: 0.2rem 1rem;
             font-weight: 500;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
         }
-        .kd-sidebar .nav-link:hover, .kd-sidebar .nav-link.active {
-            background-color: #2e7d32;
+        .kd-sidebar .nav-link:hover {
+            background-color: var(--sidebar-hover);
+            color: #f8fafc;
+            transform: translateX(5px);
+        }
+        .kd-sidebar .nav-link.active {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
         }
-        .kd-sidebar .nav-link i { font-size: 1.2rem; width: 30px; }
+        .kd-sidebar .nav-link i { font-size: 1.25rem; width: 35px; }
         
-        /* Main Content Wrapper */
+        /* Voice Assistant Dark Box */
+        .voice-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            margin: 1rem;
+        }
+        
+        /* Logout Button */
+        .logout-link { color: #f87171 !important; margin-top: auto; margin-bottom: 1.5rem; }
+        .logout-link:hover { background: rgba(239, 68, 68, 0.1) !important; color: #fca5a5 !important; }
+
+        /* --- 3. MAIN CONTENT & TOPBAR --- */
         .kd-main {
-            margin-left: 280px;
+            margin-left: var(--sidebar-width);
             min-height: 100vh;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        /* Mobile Adjustments */
+        /* Glassmorphism Topbar */
+        .kd-topbar { 
+            height: 75px; 
+            background: rgba(var(--bs-body-bg-rgb), 0.85) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1) !important;
+        }
+
+        /* --- 4. RESPONSIVE LOGIC --- */
+        @media (min-width: 992px) {
+            .kd-sidebar.collapsed { transform: translateX(-100%); }
+            .kd-main.expanded { margin-left: 0; }
+        }
         @media (max-width: 991.98px) {
             .kd-sidebar { transform: translateX(-100%); }
-            .kd-sidebar.show { transform: translateX(0); }
+            .kd-sidebar.show { transform: translateX(0); box-shadow: 10px 0 25px rgba(0,0,0,0.5); }
             .kd-main { margin-left: 0; }
         }
 
-        /* Topbar & Translate Fixes */
-        .kd-topbar { height: 70px; }
-        .goog-te-gadget-simple { border: 1px solid #ccc !important; border-radius: 6px !important; padding: 4px !important; }
+        /* Google Translate Polish */
+        .goog-te-gadget-simple { border: 1px solid var(--bs-border-color) !important; border-radius: 8px !important; padding: 6px 10px !important; font-family: 'Poppins', sans-serif !important; font-size: 0.85rem !important;}
         .goog-te-banner-frame { display: none !important; }
         body { top: 0 !important; }
     </style>
@@ -64,10 +121,10 @@
 
     <div class="offcanvas-backdrop fade show d-none" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-    <nav class="kd-sidebar bg-body shadow border-end d-flex flex-column p-3" id="sidebar">
-        <div class="d-flex align-items-center justify-content-between mb-4 px-2 mt-2">
-            <span class="fs-4 fw-bold text-success"><i class="bi bi-tree-fill me-2"></i>KrishiDhan</span>
-            <button class="btn btn-sm btn-outline-secondary d-lg-none" onclick="toggleSidebar()">
+    <nav class="kd-sidebar d-flex flex-column py-3" id="sidebar">
+        <div class="d-flex align-items-center justify-content-between mb-4 px-4 mt-2 border-bottom border-secondary border-opacity-25 pb-4">
+            <span class="fs-4 fw-bolder text-white tracking-wide"><i class="bi bi-tree-fill text-success me-2"></i>KrishiDhan</span>
+            <button class="btn btn-sm btn-outline-light border-0 d-lg-none" onclick="toggleSidebar()">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
@@ -75,12 +132,12 @@
         <div class="nav flex-column mb-auto">
             <a href="/farmer_dashboard" class="nav-link"><i class="bi bi-house-door"></i> Home</a>
             
-            <h6 class="text-uppercase text-muted fw-bold mt-4 mb-2 px-3" style="font-size: 0.8rem;">Smart Tools</h6>
+            <div class="sidebar-heading">Smart Tools</div>
             <a href="/recommend" class="nav-link"><i class="bi bi-robot"></i> AI Advice</a>
             <a href="/plant_doctor" class="nav-link"><i class="bi bi-prescription2"></i> Plant Doctor</a>
             <a href="/analytics" class="nav-link"><i class="bi bi-graph-up-arrow"></i> Market Trends</a>
 
-            <h6 class="text-uppercase text-muted fw-bold mt-4 mb-2 px-3" style="font-size: 0.8rem;">Farm & Shop</h6>
+            <div class="sidebar-heading">Farm & Shop</div>
             <a href="/my_crops" class="nav-link"><i class="bi bi-flower1"></i> My Farm</a>
             <a href="/shop" class="nav-link"><i class="bi bi-shop"></i> Store</a>
             
@@ -90,50 +147,50 @@
             </a>
             
             <a href="/news_schemes" class="nav-link"><i class="bi bi-newspaper"></i> News & Schemes</a>
+            
+            <a href="/logout" class="nav-link logout-link mt-4"><i class="bi bi-box-arrow-right"></i> Secure Logout</a>
         </div>
 
-        <div class="mt-4 p-3 bg-body-secondary rounded-3 border">
-            <label class="form-label fw-bold text-muted mb-1" style="font-size: 0.85rem;">Voice Assistant</label>
-            <select id="voiceLang" class="form-select form-select-sm mb-2 shadow-sm">
+        <div class="voice-box p-3">
+            <label class="form-label fw-bold text-white-50 mb-2" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Voice Assistant</label>
+            <select id="voiceLang" class="form-select form-select-sm mb-3 bg-dark text-white border-secondary">
                 <option value="en-US">English</option>
                 <option value="hi-IN">Hindi</option>
                 <option value="mr-IN">Marathi</option>
             </select>
-            <button onclick="startListening()" id="micButton" class="btn btn-warning w-100 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+            <button onclick="startListening()" id="micButton" class="btn btn-warning w-100 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" style="border-radius: 8px;">
                 <i class="bi bi-mic-fill fs-5"></i> Speak
             </button>
         </div>
-
-        <hr>
         
-        <div class="dropdown">
-            <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle px-2" data-bs-toggle="dropdown">
-                <i class="bi bi-person-circle fs-3 me-2 text-success"></i>
-                <strong class="text-truncate">{{ session.get('name', 'Farmer') }}</strong>
+        <div class="px-4 pb-2 pt-3 border-top border-secondary border-opacity-25 mt-2">
+            <a href="/profile" class="d-flex align-items-center text-decoration-none">
+                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold me-3 shadow-sm" style="width: 40px; height: 40px;">
+                    {{ session.get('name', 'F')[0] | upper }}
+                </div>
+                <div>
+                    <strong class="d-block text-white text-truncate" style="max-width: 150px;">{{ session.get('name', 'Farmer') }}</strong>
+                    <small class="text-white-50">View Profile</small>
+                </div>
             </a>
-            <ul class="dropdown-menu text-small shadow">
-                <li><a class="dropdown-item" href="/profile"><i class="bi bi-person me-2"></i>Profile</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger fw-bold" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Sign out</a></li>
-            </ul>
         </div>
     </nav>
 
     <main class="kd-main d-flex flex-column">
         
-        <header class="kd-topbar bg-body border-bottom shadow-sm d-flex align-items-center justify-content-between px-3 px-md-4 sticky-top">
+        <header class="kd-topbar sticky-top d-flex align-items-center justify-content-between px-3 px-md-4">
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-light d-lg-none shadow-sm" onclick="toggleSidebar()">
-                    <i class="bi bi-list fs-4"></i>
+                <button class="btn btn-light shadow-sm rounded-circle d-flex align-items-center justify-content-center" onclick="toggleSidebar()" style="width: 40px; height: 40px;">
+                    <i class="bi bi-list fs-4 text-dark"></i>
                 </button>
-                <h5 class="mb-0 fw-bold d-none d-sm-block text-secondary" id="pageTitle">Dashboard</h5>
+                <h5 class="mb-0 fw-bold d-none d-sm-block text-body" id="pageTitle">Dashboard</h5>
             </div>
             
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-outline-secondary rounded-circle p-2 d-flex align-items-center justify-content-center" id="themeToggle" style="width: 40px; height: 40px;">
+                <button class="btn btn-outline-secondary rounded-circle p-2 d-flex align-items-center justify-content-center bg-body" id="themeToggle" style="width: 40px; height: 40px;">
                     <i class="bi bi-moon-stars-fill"></i>
                 </button>
-                <div id="google_translate_element"></div>
+                <div id="google_translate_element" class="d-none d-md-block"></div>
             </div>
         </header>
 
@@ -167,15 +224,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // 1. Sidebar Logic
+        // 1. Sidebar Desktop + Mobile Logic
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
+            const main = document.querySelector('.kd-main');
             const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('show');
-            if(sidebar.classList.contains('show')) {
-                overlay.classList.remove('d-none');
+            
+            if (window.innerWidth >= 992) {
+                sidebar.classList.toggle('collapsed');
+                main.classList.toggle('expanded');
             } else {
-                overlay.classList.add('d-none');
+                sidebar.classList.toggle('show');
+                if(sidebar.classList.contains('show')) overlay.classList.remove('d-none');
+                else overlay.classList.add('d-none');
             }
         }
 
@@ -187,7 +248,6 @@
         menuItems.forEach(item => {
             if(item.getAttribute('href') === currentLocation) {
                 item.classList.add('active');
-                item.classList.add('shadow-sm');
                 if(pageTitle) pageTitle.innerText = item.innerText.trim();
             }
         });
@@ -219,7 +279,7 @@
             }
         }
 
-        // 4. Voice Command Logic (Preserved)
+        // 4. Voice Command Logic
         function startListening() {
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
                 alert("Please use Google Chrome for Voice Commands."); return;
