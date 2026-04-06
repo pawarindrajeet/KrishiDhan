@@ -1,48 +1,100 @@
 {% extends "home/home_master.html" %}
 
 {% block content %}
-<div style="text-align: center; margin-bottom: 20px;">
-    <h2 style="color: #2e7d32;">☁️ Weather Forecast</h2>
-    <p>Check the latest conditions for your farm.</p>
+<style>
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
     
-    <form action="/weather" method="POST" style="margin: 20px;">
-        <input type="text" name="city" placeholder="Enter City Name (e.g. Pune)" value="{{ city }}" 
-               style="padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px;">
-        <button type="submit" style="padding: 10px 20px; background: #2e7d32; color: white; border: none; cursor: pointer;">Check Weather</button>
-    </form>
-</div>
+    /* Custom Card Borders */
+    .border-temp { border-top: 5px solid #ffc107 !important; }
+    .border-humidity { border-top: 5px solid #0dcaf0 !important; }
+    .border-wind { border-top: 5px solid #6f42c1 !important; }
+</style>
 
-<div class="card-grid" style="justify-content: center;">
+<div class="container-fluid py-5" style="max-width: 1000px; margin: 0 auto; min-height: 80vh;">
     
-    <div class="card" style="border-top: 4px solid #fbc02d;">
-        <h3>🌡️ Temperature</h3>
-        <h1 style="font-size: 48px; margin: 10px 0;">{{ weather.temp }}°C</h1>
-        <p>{{ weather.desc }}</p> </div>
-
-    <div class="card" style="border-top: 4px solid #0288d1;">
-        <h3>💧 Humidity</h3>
-        <h1 style="font-size: 48px; margin: 10px 0;">{{ weather.humidity }}%</h1>
-        <p>Chance of Rain: {{ "High" if weather.humidity > 80 else "Low" }}</p>
+    <div class="text-center mb-5 fade-in-up">
+        <h1 class="display-6 fw-bold text-success mb-2"><i class="bi bi-cloud-sun me-2"></i>Agricultural Weather</h1>
+        <p class="text-muted fs-5 mb-4">Check live atmospheric conditions to optimize your farming schedule.</p>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <form action="/weather" method="POST" class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden border border-success border-opacity-25">
+                    <span class="input-group-text bg-white border-0 text-success ps-4"><i class="bi bi-geo-alt-fill"></i></span>
+                    <input type="text" name="city" class="form-control border-0 shadow-none fw-bold" placeholder="Enter City Name (e.g. Pune)" value="{{ city }}" required>
+                    <button type="submit" class="btn btn-success fw-bold px-4">Check Forecast</button>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <div class="card" style="border-top: 4px solid #7b1fa2;">
-        <h3>💨 Wind Speed</h3>
-        <h1 style="font-size: 48px; margin: 10px 0;">{{ weather.wind }}</h1>
-        <p>km/h</p>
+    {% if weather %}
+    <div class="animate__animated animate__fadeInUp">
+        
+        <div class="row g-4 mb-5">
+            
+            <div class="col-12 col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 border-temp hover-lift bg-white text-center p-4">
+                    <div class="text-warning mb-2"><i class="bi bi-thermometer-half fs-1"></i></div>
+                    <h5 class="fw-bold text-dark text-uppercase small tracking-wide">Temperature</h5>
+                    <h1 class="display-3 fw-bold text-dark my-2">{{ weather.temp }}°<span class="fs-3 text-muted">C</span></h1>
+                    <p class="text-muted text-capitalize fw-medium mb-0">{{ weather.desc }}</p>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 border-humidity hover-lift bg-white text-center p-4">
+                    <div class="text-info mb-2"><i class="bi bi-droplet-half fs-1"></i></div>
+                    <h5 class="fw-bold text-dark text-uppercase small tracking-wide">Humidity</h5>
+                    <h1 class="display-3 fw-bold text-dark my-2">{{ weather.humidity }}<span class="fs-3 text-muted">%</span></h1>
+                    <p class="text-muted fw-medium mb-0">
+                        Chance of Rain: <span class="fw-bold {{ 'text-primary' if weather.humidity > 80 else 'text-success' }}">{{ "High" if weather.humidity > 80 else "Low" }}</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 border-wind hover-lift bg-white text-center p-4">
+                    <div style="color: #6f42c1;" class="mb-2"><i class="bi bi-wind fs-1"></i></div>
+                    <h5 class="fw-bold text-dark text-uppercase small tracking-wide">Wind Speed</h5>
+                    <h1 class="display-3 fw-bold text-dark my-2">{{ weather.wind }}</h1>
+                    <p class="text-muted fw-medium mb-0">Kilometers / Hour</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 bg-success bg-opacity-10 border border-success border-opacity-25">
+            <div class="card-body p-4 d-flex align-items-center gap-4">
+                <div class="d-none d-sm-flex align-items-center justify-content-center bg-success text-white rounded-circle flex-shrink-0" style="width: 60px; height: 60px;">
+                    <i class="bi bi-lightbulb-fill fs-3"></i>
+                </div>
+                <div>
+                    <h5 class="fw-bold text-success mb-2">Smart Farming Tip for {{ city }}</h5>
+                    <p class="text-dark fs-5 mb-0" style="line-height: 1.6;">
+                        {% if weather.temp > 30 %}
+                            It's very hot today! Ensure your crops are well-irrigated and check soil moisture to prevent heat stress. ☀️
+                        {% elif weather.humidity > 80 %}
+                            High humidity detected. Watch out for fungal diseases in crops like Grapes and Tomatoes. Consider preventative sprays. 🍄
+                        {% else %}
+                            Weather looks good! This is an ideal day for fertilizer application or standard field maintenance. ✅
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </div>
+    
+    {% else %}
+    <div class="text-center py-5 mt-4">
+        <div class="d-inline-flex align-items-center justify-content-center bg-light text-muted rounded-circle mb-3" style="width: 100px; height: 100px;">
+            <i class="bi bi-globe-central-south-asia fs-1"></i>
+        </div>
+        <h4 class="fw-bold text-dark">Awaiting Location</h4>
+        <p class="text-muted fs-5">Enter your city above to get highly localized agricultural weather data.</p>
+    </div>
+    {% endif %}
 
-</div>
-
-<div style="margin-top: 30px; background: #e8f5e9; padding: 20px; border-radius: 8px; text-align: center;">
-    <h3 style="color: #2e7d32;">💡 Farming Tip for Today:</h3>
-    <p>
-        {% if weather.temp > 30 %}
-            It's very hot today! Ensure your crops are well-irrigated to prevent heat stress. ☀️
-        {% elif weather.humidity > 80 %}
-            High humidity detected. Watch out for fungal diseases in crops like Grapes and Tomato. 🍄
-        {% else %}
-            Weather looks good! Ideal day for fertilizer application. ✅
-        {% endif %}
-    </p>
 </div>
 {% endblock %}

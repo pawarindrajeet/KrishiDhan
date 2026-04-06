@@ -1,94 +1,185 @@
 {% extends "home/home_master.html" %}
 
 {% block content %}
-
-<div id="hero-section" class="fade-in">
+<style>
+    /* Premium Animations */
+    .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; }
+    @keyframes fadeInUp {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
     
-    <div class="hero-wrapper">
-        
-        <div class="hero-text">
-            <h1 class="main-heading">Empowering Farmers,<br> <span class="highlight">Cultivating Wealth</span> 🌾</h1>
-            <p class="sub-heading">
-                KrishiDhan brings modern technology to your fields. 
-                Get real-time weather, AI crop advice, and direct market access.
-                Smart.
-            </p>
-            
-            <div class="cta-buttons">
-                <a href="/login" class="btn-primary-lg">Login 🔐</a>
-                
-                <a href="/register" class="btn-outline-lg">Join Now 📝</a>
-                
-                <a href="/calculator" class="btn-outline-lg" style="border-color: #1565C0; color: #1565C0;">
-                    Calculator 📐
-                </a>
-            </div>
-            
-            <div class="trust-badges">
-                <span>✅ AI Powered</span>
-                <span>✅ 100% Free</span>
-                <span>✅ Expert Support</span>
-            </div>
-        </div>
+    .float-animation { animation: float 6s ease-in-out infinite; }
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+        100% { transform: translateY(0px); }
+    }
 
-        <div class="hero-visual">
-            <div class="weather-card-glass">
-                <div class="weather-header">
-                    <h3>Live Weather 🌦️</h3>
-                    <form action="/" method="POST" class="weather-form-compact">
-                        <input type="text" name="city" placeholder="City..." value="{{ city }}" required>
-                        <button type="submit">🔍</button>
-                    </form>
-                </div>
+    /* Gradient Text */
+    .text-gradient {
+        background: linear-gradient(135deg, #1b5e20 0%, #4caf50 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
-                {% if weather %}
-                    <div class="weather-body">
-                        <img src="https://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@4x.png" alt="Icon">
-                        <div>
-                            <h2 class="temp">{{ weather.main.temp }}°C</h2>
-                            <p class="loc">📍 {{ weather.name }}</p>
-                            <p class="desc">{{ weather.weather[0].description }}</p>
+    /* Hover Utilities */
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important; }
+    
+    .icon-square {
+        width: 60px; height: 60px;
+        display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 1rem; font-size: 1.8rem; mb-3;
+    }
+</style>
+
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="toast align-items-center text-bg-{{ 'danger' if category == 'error' else 'success' }} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
+                    <div class="d-flex">
+                        <div class="toast-body fw-bold">
+                            <i class="bi bi-info-circle-fill me-2"></i> {{ message }}
                         </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
-                {% else %}
-                    <div class="weather-empty">
-                        <p>Enter your city to check live forecast.</p>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-    </div>
-
-    <div class="features-section">
-        <h3 class="section-title">Why Choose KrishiDhan?</h3>
-        <div class="card-grid">
-            <div class="card feature-card">
-                <div class="icon-box">📡</div>
-                <h4>Smart Sensing</h4>
-                <p>Satellite-based precision weather tracking.</p>
-            </div>
-            <div class="card feature-card">
-                <div class="icon-box">🧪</div>
-                <h4>Soil Analysis</h4>
-                <p>AI-driven crop recommendations.</p>
-            </div>
-            <div class="card feature-card">
-                <div class="icon-box">🚜</div>
-                <h4>Community</h4>
-                <p>Connect directly with mandi markets.</p>
-            </div>
-        </div>
-    </div>
-
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 </div>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <script>alert("{{ message }}");</script>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+<div class="container-fluid overflow-hidden" style="background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);">
+    <div class="container py-5">
+        
+        <div class="row align-items-center min-vh-75 g-5 py-5">
+            
+            <div class="col-lg-6 text-center text-lg-start fade-in-up">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill bg-success bg-opacity-10 text-success fw-bold mb-4 small">
+                    <span class="spinner-grow spinner-grow-sm text-success" role="status"></span>
+                    Smart Agriculture Platform
+                </div>
+                
+                <h1 class="display-4 fw-bold text-dark mb-3 lh-sm">
+                    Empowering Farmers,<br>
+                    <span class="text-gradient">Cultivating Wealth 🌾</span>
+                </h1>
+                
+                <p class="lead text-muted mb-5 pe-lg-4" style="line-height: 1.8;">
+                    KrishiDhan brings modern technology directly to your fields. Access real-time weather forecasting, AI-driven crop advice, and direct mandi market data—all in one place.
+                </p>
+                
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start mb-5">
+                    <a href="/login" class="btn btn-success btn-lg px-5 rounded-pill fw-bold shadow-sm hover-lift d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-shield-lock"></i> Login
+                    </a>
+                    <a href="/register" class="btn btn-outline-dark btn-lg px-5 rounded-pill fw-bold shadow-sm hover-lift d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-person-plus"></i> Join Now
+                    </a>
+                </div>
+                
+                <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-4 text-muted small fw-bold mt-4 border-top pt-4">
+                    <div class="d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill text-success"></i> AI Powered</div>
+                    <div class="d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill text-success"></i> 100% Free</div>
+                    <div class="d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill text-success"></i> Expert Support</div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 fade-in-up" style="animation-delay: 0.2s;">
+                <div class="float-animation position-relative">
+                    
+                    <div class="position-absolute top-50 start-50 translate-middle bg-success bg-opacity-20 rounded-circle blur-3xl" style="width: 400px; height: 400px; filter: blur(60px); z-index: 0;"></div>
+
+                    <div class="card border-0 shadow-lg rounded-5 overflow-hidden position-relative z-1" style="background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);">
+                        
+                        <div class="card-header bg-transparent border-0 p-4 pb-0">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-cloud-sun-fill text-warning me-2"></i>Live Forecast</h5>
+                                <a href="/calculator" class="btn btn-sm btn-light text-primary fw-bold rounded-pill shadow-sm">
+                                    <i class="bi bi-calculator"></i> Land Calc
+                                </a>
+                            </div>
+
+                            <form action="/" method="POST" class="input-group shadow-sm rounded-pill overflow-hidden border border-success border-opacity-25">
+                                <span class="input-group-text bg-white border-0 pe-1 text-success"><i class="bi bi-geo-alt-fill"></i></span>
+                                <input type="text" name="city" class="form-control border-0 fw-bold shadow-none" placeholder="Search your city..." value="{{ city }}" required>
+                                <button type="submit" class="btn btn-success fw-bold px-4">Check</button>
+                            </form>
+                        </div>
+
+                        <div class="card-body p-4 p-md-5 text-center">
+                            {% if weather %}
+                                <div class="d-flex flex-column align-items-center">
+                                    <img src="https://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@4x.png" alt="Weather Icon" class="img-fluid" style="width: 150px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));">
+                                    <h1 class="display-2 fw-bold text-dark mb-0" style="line-height: 1;">{{ weather.main.temp }}°<span class="text-muted fs-3">C</span></h1>
+                                    <h4 class="fw-bold text-success mt-3 mb-1">{{ weather.name }}</h4>
+                                    <p class="text-muted text-capitalize fs-5 mb-0 fw-medium">{{ weather.weather[0].description }}</p>
+                                </div>
+                            {% else %}
+                                <div class="py-5 text-muted">
+                                    <i class="bi bi-search" style="font-size: 3rem; opacity: 0.2;"></i>
+                                    <p class="mt-3 fw-medium">Enter your city above to check the live agricultural weather forecast.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container py-5 my-5">
+    <div class="text-center mb-5 fade-in-up">
+        <h6 class="text-success fw-bold text-uppercase tracking-wide">Platform Capabilities</h6>
+        <h2 class="display-6 fw-bold text-dark">Why Choose KrishiDhan?</h2>
+    </div>
+
+    <div class="row g-4 fade-in-up" style="animation-delay: 0.3s;">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4 hover-lift bg-white">
+                <div class="icon-square bg-primary bg-opacity-10 text-primary mx-auto">
+                    <i class="bi bi-broadcast"></i>
+                </div>
+                <h5 class="fw-bold text-dark mt-3">Smart Sensing</h5>
+                <p class="text-muted mb-0">Satellite-based precision weather tracking to help you plan your farming schedule accurately.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4 hover-lift bg-white">
+                <div class="icon-square bg-success bg-opacity-10 text-success mx-auto">
+                    <i class="bi bi-robot"></i>
+                </div>
+                <h5 class="fw-bold text-dark mt-3">AI Soil Analysis</h5>
+                <p class="text-muted mb-0">Machine learning algorithms analyze your soil N-P-K data to recommend the most profitable crops.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4 hover-lift bg-white">
+                <div class="icon-square bg-warning bg-opacity-10 text-warning mx-auto">
+                    <i class="bi bi-shop"></i>
+                </div>
+                <h5 class="fw-bold text-dark mt-3">Mandi Integration</h5>
+                <p class="text-muted mb-0">Connect directly with live market prices across India to sell your harvest at the best possible rates.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        var toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl)
+        });
+        toastList.forEach(toast => toast.show());
+    });
+</script>
 
 {% endblock %}

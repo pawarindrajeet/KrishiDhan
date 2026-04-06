@@ -1,34 +1,81 @@
 {% extends "farmer/farmer_master.html" %}
 
 {% block content %}
-<div class="container" style="padding: 40px 20px;">
-    <h2 style="text-align: center; color: #2e7d32; font-weight: 800; margin-bottom: 30px;">🌱 Crop Categories (Farmer Dashboard)</h2>
-    <p style="text-align: center; color: #666; margin-bottom: 40px;">Select a category to view detailed farming information.</p>
+<style>
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
+    .icon-circle { 
+        width: 90px; height: 90px; 
+        display: inline-flex; align-items: center; justify-content: center; 
+        border-radius: 50%; font-size: 3rem; margin-bottom: 20px; 
+    }
+</style>
 
-    <div class="card-grid">
-        <div class="card" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s;" onclick="location.href='/crops/Cereals'">
-            <div style="font-size: 50px; margin-bottom: 10px;">🌾</div>
-            <h3>Cereals</h3>
-            <p>Wheat, Rice, Maize, etc.</p>
+<div class="container-fluid pb-5" style="max-width: 1200px; margin: 0 auto;">
+    
+    <div class="text-center mb-5 mt-3">
+        <h1 class="fw-bold text-success mb-2 display-6"><i class="bi bi-journal-richtext me-2"></i>Crop Information Library</h1>
+        <p class="text-muted fs-5">Select a category below to explore detailed farming guides, soil requirements, and seasonal tips.</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+        
+        <div class="col">
+            <a href="/crops/Cereals" class="text-decoration-none d-block h-100">
+                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center bg-white">
+                    <div class="card-body p-4 p-xl-5">
+                        <div class="icon-circle bg-warning bg-opacity-10 text-warning mx-auto">
+                            🌾
+                        </div>
+                        <h4 class="fw-bold text-dark mb-2">Cereals</h4>
+                        <p class="text-muted small mb-0">Wheat, Rice, Maize, Bajra, Jowar & more.</p>
+                    </div>
+                </div>
+            </a>
         </div>
 
-        <div class="card" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s;" onclick="location.href='/crops/Vegetables'">
-            <div style="font-size: 50px; margin-bottom: 10px;">🍅</div>
-            <h3>Vegetables</h3>
-            <p>Potato, Onion, Tomato, etc.</p>
+        <div class="col">
+            <a href="/crops/Vegetables" class="text-decoration-none d-block h-100">
+                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center bg-white">
+                    <div class="card-body p-4 p-xl-5">
+                        <div class="icon-circle bg-danger bg-opacity-10 text-danger mx-auto">
+                            🍅
+                        </div>
+                        <h4 class="fw-bold text-dark mb-2">Vegetables</h4>
+                        <p class="text-muted small mb-0">Potato, Onion, Tomato, Brinjal & more.</p>
+                    </div>
+                </div>
+            </a>
         </div>
 
-        <div class="card" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s;" onclick="location.href='/crops/Fruits'">
-            <div style="font-size: 50px; margin-bottom: 10px;">🥭</div>
-            <h3>Fruits</h3>
-            <p>Mango, Banana, Apple, etc.</p>
+        <div class="col">
+            <a href="/crops/Fruits" class="text-decoration-none d-block h-100">
+                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center bg-white">
+                    <div class="card-body p-4 p-xl-5">
+                        <div class="icon-circle mx-auto" style="background-color: #fff3e0;">
+                            🥭
+                        </div>
+                        <h4 class="fw-bold text-dark mb-2">Fruits</h4>
+                        <p class="text-muted small mb-0">Mango, Banana, Apple, Grapes & more.</p>
+                    </div>
+                </div>
+            </a>
         </div>
 
-        <div class="card" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s;" onclick="location.href='/crops/Pulses'">
-            <div style="font-size: 50px; margin-bottom: 10px;">🫘</div>
-            <h3>Pulses</h3>
-            <p>Gram, Lentils, Peas, etc.</p>
+        <div class="col">
+            <a href="/crops/Pulses" class="text-decoration-none d-block h-100">
+                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center bg-white">
+                    <div class="card-body p-4 p-xl-5">
+                        <div class="icon-circle bg-info bg-opacity-10 text-info mx-auto" style="background-color: #e3f2fd !important;">
+                            🫘
+                        </div>
+                        <h4 class="fw-bold text-dark mb-2">Pulses</h4>
+                        <p class="text-muted small mb-0">Gram, Lentils, Peas, Moong, Tur & more.</p>
+                    </div>
+                </div>
+            </a>
         </div>
+
     </div>
 </div>
 {% endblock %}

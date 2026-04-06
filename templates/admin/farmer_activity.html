@@ -1,50 +1,140 @@
 {% extends "admin/admin_master.html" %}
+
 {% block content %}
-<div class="container">
-    <h1 style="color: #2e7d32; margin-bottom: 30px;">👥 Farmer Activity Log</h1>
+<style>
+    .table-hover tbody tr:hover td { background-color: #f8f9fa; }
+    /* Consistent column widths for better readability */
+    .th-farmer { width: 30%; }
+    .th-action { width: 35%; }
+    .th-amount { width: 15%; }
+    .th-date { width: 20%; }
+</style>
 
-    <div style="background: white; padding: 25px; border-radius: 10px; margin-bottom: 40px; border-top: 5px solid #f57c00;">
-        <h3 style="margin-top: 0;">🛍️ Recent Shop Orders</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-            <tr style="background: #fff3e0; text-align: left;">
-                <th style="padding: 10px;">Farmer Name</th>
-                <th>Product Bought</th>
-                <th>Price</th>
-                <th>Date</th>
-            </tr>
-            {% for order in orders %}
-            <tr style="border-bottom: 1px solid #eee;">
-                <td style="padding: 10px; font-weight: bold;">{{ order[1] }}</td>
-                <td>{{ order[2] }}</td>
-                <td>₹ {{ order[3] }}</td>
-                <td>{{ order[4] }}</td>
-            </tr>
-            {% else %}
-            <tr><td colspan="4" style="padding: 20px; text-align: center;">No orders yet.</td></tr>
-            {% endfor %}
-        </table>
+<div class="container-fluid pb-5">
+    
+    <div class="d-flex align-items-center mb-5 mt-2 pb-3 border-bottom border-light">
+        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex justify-content-center align-items-center me-3 flex-shrink-0" style="width: 60px; height: 60px;">
+            <i class="bi bi-activity fs-2"></i>
+        </div>
+        <div>
+            <h2 class="fw-bold text-dark mb-1">Farmer Activity Log</h2>
+            <p class="text-muted mb-0 fs-6">Monitor live platform engagement, recent shop purchases, and active crop cycles.</p>
+        </div>
     </div>
 
-    <div style="background: white; padding: 25px; border-radius: 10px; border-top: 5px solid #2e7d32;">
-        <h3 style="margin-top: 0;">🌱 What Farmers Are Growing</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-            <tr style="background: #e8f5e9; text-align: left;">
-                <th style="padding: 10px;">Farmer Name</th>
-                <th>Crop</th>
-                <th>Stage</th>
-                <th>Sown Date</th>
-            </tr>
-            {% for crop in crops %}
-            <tr style="border-bottom: 1px solid #eee;">
-                <td style="padding: 10px; font-weight: bold;">{{ crop[1] }}</td>
-                <td>{{ crop[2] }}</td>
-                <td><span style="background: #c8e6c9; color: #1b5e20; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem;">{{ crop[3] }}</span></td>
-                <td>{{ crop[4] }}</td>
-            </tr>
-            {% else %}
-            <tr><td colspan="4" style="padding: 20px; text-align: center;">No active crops found.</td></tr>
-            {% endfor %}
-        </table>
+    <div class="card border-0 shadow-sm rounded-4 mb-5 overflow-hidden bg-white" style="border-top: 5px solid #fd7e14 !important;">
+        
+        <div class="card-header bg-transparent border-0 p-4 pb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-bag-check-fill text-warning fs-4"></i>
+            <h4 class="fw-bold text-dark mb-0">Recent Shop Orders</h4>
+        </div>
+
+        <div class="card-body p-0 mt-3">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 border-0">
+                    <thead class="table-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
+                        <tr>
+                            <th scope="col" class="py-3 ps-4 th-farmer border-0">Farmer Name</th>
+                            <th scope="col" class="py-3 th-action border-0">Product Bought</th>
+                            <th scope="col" class="py-3 th-amount border-0">Price</th>
+                            <th scope="col" class="py-3 pe-4 text-end th-date border-0">Transaction Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-top-0">
+                        {% for order in orders %}
+                        <tr>
+                            <td class="py-3 ps-4 border-light">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 35px; height: 35px; font-size: 0.8rem;">
+                                        {{ order[1][0] }}
+                                    </div>
+                                    <span class="fw-bold text-dark">{{ order[1] }}</span>
+                                </div>
+                            </td>
+                            <td class="py-3 border-light text-dark fw-medium">
+                                {{ order[2] }}
+                            </td>
+                            <td class="py-3 border-light">
+                                <span class="fw-bold text-success">₹ {{ order[3] }}</span>
+                            </td>
+                            <td class="py-3 pe-4 border-light text-end text-muted small">
+                                <i class="bi bi-calendar2-week me-1"></i> {{ order[4] }}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5 border-0">
+                                <div class="d-inline-flex align-items-center justify-content-center bg-light text-muted rounded-circle mb-3" style="width: 70px; height: 70px;">
+                                    <i class="bi bi-receipt fs-2"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1">No orders yet</h6>
+                                <p class="text-muted small mb-0">When farmers purchase items from the shop, they will appear here.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white" style="border-top: 5px solid #0d6efd !important;">
+        
+        <div class="card-header bg-transparent border-0 p-4 pb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-tree-fill text-primary fs-4"></i>
+            <h4 class="fw-bold text-dark mb-0">Active Farm Cycles</h4>
+        </div>
+
+        <div class="card-body p-0 mt-3">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 border-0">
+                    <thead class="table-light text-muted small text-uppercase" style="letter-spacing: 0.5px;">
+                        <tr>
+                            <th scope="col" class="py-3 ps-4 th-farmer border-0">Farmer Name</th>
+                            <th scope="col" class="py-3 th-action border-0">Crop Tracked</th>
+                            <th scope="col" class="py-3 th-amount border-0">Current Stage</th>
+                            <th scope="col" class="py-3 pe-4 text-end th-date border-0">Sown Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-top-0">
+                        {% for crop in crops %}
+                        <tr>
+                            <td class="py-3 ps-4 border-light">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 35px; height: 35px; font-size: 0.8rem;">
+                                        {{ crop[1][0] }}
+                                    </div>
+                                    <span class="fw-bold text-dark">{{ crop[1] }}</span>
+                                </div>
+                            </td>
+                            <td class="py-3 border-light text-dark fw-medium">
+                                {{ crop[2] }}
+                            </td>
+                            <td class="py-3 border-light">
+                                <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 fs-6 rounded-pill">
+                                    {{ crop[3] }}
+                                </span>
+                            </td>
+                            <td class="py-3 pe-4 border-light text-end text-muted small">
+                                <i class="bi bi-clock-history me-1"></i> {{ crop[4] }}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5 border-0">
+                                <div class="d-inline-flex align-items-center justify-content-center bg-light text-muted rounded-circle mb-3" style="width: 70px; height: 70px;">
+                                    <i class="bi bi-inboxes fs-2"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1">No active crops</h6>
+                                <p class="text-muted small mb-0">When farmers add crops to their dashboard, you can track them here.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
 {% endblock %}

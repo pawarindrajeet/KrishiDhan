@@ -1,85 +1,158 @@
 {% extends "farmer/farmer_master.html" %}
 
 {% block content %}
-<div class="container" style="max-width: 900px;">
+<style>
+    .form-floating > label { color: #6c757d; }
+    .form-control:focus {
+        border-color: #1976d2;
+        box-shadow: 0 0 0 0.25rem rgba(25, 118, 210, 0.25);
+    }
+    .input-group-text { background-color: #f8f9fa; border-color: #dee2e6; color: #495057; font-weight: 500;}
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
+    @keyframes slideUpFade {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-result { animation: slideUpFade 0.5s ease-out forwards; }
+</style>
+
+<div class="container-fluid pb-5" style="max-width: 900px; margin: 0 auto;">
     
-    <div style="text-align: center; margin-bottom: 30px;">
-        <h2 style="color: #2e7d32; font-weight: 800;">🤖 AI Crop Recommender</h2>
-        <p style="color: #666;">Enter your soil and climate data to get a scientific crop suggestion.</p>
+    <div class="text-center mb-5 mt-3">
+        <h1 class="fw-bold text-primary mb-2 display-6"><i class="bi bi-robot me-2"></i>AI Crop Recommender</h1>
+        <p class="text-muted fs-5">Enter your soil and environmental data. Our AI will analyze the metrics and suggest the scientifically optimal crop for your farm.</p>
     </div>
 
-    <div class="card" style="border-top: 5px solid #1976d2; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
-        <div class="card-body" style="padding: 30px;">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+        <div class="card-header bg-primary bg-gradient text-white py-3 border-0">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-clipboard-data me-2"></i>Input Farm Metrics</h5>
+        </div>
+        <div class="card-body p-4 p-md-5">
             
-            <form action="/recommend" method="POST">
+            <form action="/recommend" method="POST" id="recommendForm">
                 
-                <h4 style="color: #1976d2; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">🧪 Soil Nutrients (N-P-K)</h4>
+                <h5 class="fw-bold text-primary mb-4 pb-2 border-bottom border-primary border-opacity-25">
+                    <i class="bi bi-droplet-half me-2"></i>Soil Nutrients (N-P-K)
+                </h5>
                 
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
-                    <div style="flex: 1; min-width: 200px;">
-                        <label style="font-weight: bold;">Nitrogen (N)</label>
-                        <input type="number" name="N" placeholder="e.g. 90" required step="any">
+                <div class="row g-3 mb-5">
+                    <div class="col-md-4">
+                        <div class="input-group input-group-lg shadow-sm">
+                            <span class="input-group-text" id="addon-n">N</span>
+                            <div class="form-floating flex-grow-1">
+                                <input type="number" class="form-control border-start-0" id="inputN" name="N" placeholder="Nitrogen" required step="any" aria-describedby="addon-n">
+                                <label for="inputN">Nitrogen</label>
+                            </div>
+                        </div>
+                        <div class="form-text mt-1 text-muted small px-2">Optimum: 50-100</div>
                     </div>
-                    <div style="flex: 1; min-width: 200px;">
-                        <label style="font-weight: bold;">Phosphorus (P)</label>
-                        <input type="number" name="P" placeholder="e.g. 42" required step="any">
+                    
+                    <div class="col-md-4">
+                        <div class="input-group input-group-lg shadow-sm">
+                            <span class="input-group-text" id="addon-p">P</span>
+                            <div class="form-floating flex-grow-1">
+                                <input type="number" class="form-control border-start-0" id="inputP" name="P" placeholder="Phosphorus" required step="any" aria-describedby="addon-p">
+                                <label for="inputP">Phosphorus</label>
+                            </div>
+                        </div>
+                        <div class="form-text mt-1 text-muted small px-2">Optimum: 30-60</div>
                     </div>
-                    <div style="flex: 1; min-width: 200px;">
-                        <label style="font-weight: bold;">Potassium (K)</label>
-                        <input type="number" name="K" placeholder="e.g. 43" required step="any">
-                    </div>
-                </div>
-
-                <h4 style="color: #f57c00; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px;">🌤️ Climate & Soil Conditions</h4>
-
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
-                    <div style="flex: 1; min-width: 200px;">
-                        <label style="font-weight: bold;">Temperature (°C)</label>
-                        <input type="number" name="temperature" placeholder="e.g. 20.8" required step="any">
-                    </div>
-                    <div style="flex: 1; min-width: 200px;">
-                        <label style="font-weight: bold;">Humidity (%)</label>
-                        <input type="number" name="humidity" placeholder="e.g. 82.0" required step="any">
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
-                    <div style="flex: 1; min-width: 200px;">
-                        <label style="font-weight: bold;">pH Level (0-14)</label>
-                        <input type="number" name="ph" placeholder="e.g. 6.5" required step="any">
-                    </div>
-                    <div style="flex: 1; min-width: 200px;">
-                        <label style="font-weight: bold;">Rainfall (mm)</label>
-                        <input type="number" name="rainfall" placeholder="e.g. 202.9" required step="any">
+                    
+                    <div class="col-md-4">
+                        <div class="input-group input-group-lg shadow-sm">
+                            <span class="input-group-text" id="addon-k">K</span>
+                            <div class="form-floating flex-grow-1">
+                                <input type="number" class="form-control border-start-0" id="inputK" name="K" placeholder="Potassium" required step="any" aria-describedby="addon-k">
+                                <label for="inputK">Potassium</label>
+                            </div>
+                        </div>
+                        <div class="form-text mt-1 text-muted small px-2">Optimum: 30-50</div>
                     </div>
                 </div>
 
-                <button type="submit" class="primary-btn" style="margin-top: 20px; font-size: 1.2rem; background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);">
-                    🚀 Predict Best Crop
-                </button>
+                <h5 class="fw-bold text-warning mb-4 pb-2 border-bottom border-warning border-opacity-25 mt-4">
+                    <i class="bi bi-cloud-sun me-2"></i>Climate & Environmental Data
+                </h5>
+
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6">
+                        <div class="form-floating shadow-sm">
+                            <input type="number" class="form-control" id="inputTemp" name="temperature" placeholder="Temperature" required step="any">
+                            <label for="inputTemp"><i class="bi bi-thermometer-half me-1"></i> Temperature (°C)</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating shadow-sm">
+                            <input type="number" class="form-control" id="inputHumidity" name="humidity" placeholder="Humidity" required step="any">
+                            <label for="inputHumidity"><i class="bi bi-moisture me-1"></i> Humidity (%)</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating shadow-sm">
+                            <input type="number" class="form-control" id="inputPh" name="ph" placeholder="pH Level" required step="any" min="0" max="14">
+                            <label for="inputPh"><i class="bi bi-activity me-1"></i> Soil pH Level (0-14)</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating shadow-sm">
+                            <input type="number" class="form-control" id="inputRain" name="rainfall" placeholder="Rainfall" required step="any">
+                            <label for="inputRain"><i class="bi bi-cloud-rain me-1"></i> Rainfall (mm)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <button type="submit" class="btn btn-primary btn-lg px-5 py-3 fw-bold rounded-pill shadow hover-lift" id="predictBtn" style="background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%); border: none;">
+                        <i class="bi bi-cpu fs-5 me-2"></i> Predict Best Crop
+                    </button>
+                </div>
             </form>
+
         </div>
     </div>
 
     {% if prediction %}
-    <div id="result" style="margin-top: 40px; text-align: center; animation: slideUp 0.5s;">
-        <div class="card" style="background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%); color: white; border: none;">
-            <div class="card-body" style="padding: 40px;">
-                <h3 style="margin: 0; opacity: 0.9;">Best Crop for your Farm:</h3>
-                <h1 style="font-size: 4rem; margin: 10px 0; text-transform: uppercase; letter-spacing: 2px;">{{ prediction }} 🌾</h1>
-                <p>Based on scientific analysis of your soil data.</p>
-                <a href="/crops" style="color: white; font-weight: bold; text-decoration: underline;">Read growing tips for {{ prediction }} &rarr;</a>
+    <div class="animate-result mt-5 w-100" id="result-section">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden text-white" style="background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);">
+            <div class="card-body p-5 text-center">
+                <div class="d-inline-flex align-items-center justify-content-center bg-white bg-opacity-25 rounded-pill px-4 py-2 mb-4">
+                    <i class="bi bi-check-circle-fill me-2"></i> AI Analysis Complete
+                </div>
+                
+                <h4 class="opacity-75 mb-2 fw-normal">The optimal crop for your specific farm conditions is:</h4>
+                
+                <h1 class="display-2 fw-bold mb-4 text-uppercase tracking-wide" style="letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+                    {{ prediction }} <span class="fs-1">🌾</span>
+                </h1>
+                
+                <hr class="border-white border-opacity-50 w-50 mx-auto my-4">
+                
+                <p class="fs-5 mb-5 opacity-75">This recommendation is based on a scientific analysis of your N-P-K balance, pH level, temperature, humidity, and rainfall.</p>
+                
+                <a href="/crops/{{ prediction }}" class="btn btn-light text-success fw-bold rounded-pill px-5 py-3 shadow hover-lift fs-5">
+                    <i class="bi bi-journal-richtext me-2"></i> Read growing guide for {{ prediction }}
+                </a>
             </div>
         </div>
     </div>
+    <script>
+        // Scroll smoothly to results
+        setTimeout(() => {
+            document.getElementById('result-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 300);
+    </script>
     {% endif %}
 
 </div>
 
-<style>
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-</style>
+<script>
+    // Loading State for Predict Button
+    document.getElementById('recommendForm').addEventListener('submit', function() {
+        const btn = document.getElementById('predictBtn');
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Running Algorithm...';
+        btn.classList.add('disabled');
+        btn.style.opacity = '0.8';
+    });
+</script>
 {% endblock %}

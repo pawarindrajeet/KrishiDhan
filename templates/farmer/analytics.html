@@ -1,42 +1,80 @@
 {% extends "farmer/farmer_master.html" %}
 
 {% block content %}
-<div class="container" style="max-width: 1000px; margin-bottom: 50px;">
+<style>
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
+    /* Custom Top Borders for Analysis Cards */
+    .border-top-wheat { border-top: 5px solid #198754 !important; }
+    .border-top-rice { border-top: 5px solid #ffc107 !important; }
+    .border-top-cotton { border-top: 5px solid #dc3545 !important; }
+</style>
+
+<div class="container-fluid pb-5" style="max-width: 1200px; margin: 0 auto;">
     
-    <div style="text-align: center; margin-bottom: 30px;">
-        <h2 style="color: #2e7d32; font-weight: 800;">📈 Mandi Market Trends</h2>
-        <p style="color: #666;">Analyze price history to decide the best time to sell.</p>
+    <div class="text-center mb-5 mt-3">
+        <h1 class="fw-bold text-dark mb-2 display-6"><i class="bi bi-graph-up-arrow text-primary me-2"></i>Mandi Market Trends</h1>
+        <p class="text-muted fs-5">Analyze historical price data to decide the most profitable time to sell your harvest.</p>
     </div>
 
-    <div class="card" style="box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 5px solid #1976d2;">
-        <div class="card-body" style="padding: 20px;">
-            <canvas id="marketChart" style="max-height: 400px;"></canvas>
+    <div class="card border-0 shadow-sm rounded-4 mb-5 overflow-hidden">
+        <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-bar-chart-fill text-primary me-2"></i>Price History (6 Months)</h5>
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">Live Python Data</span>
+        </div>
+        <div class="card-body p-4 w-100">
+            <div style="height: 400px; width: 100%;">
+                <canvas id="marketChart"></canvas>
+            </div>
         </div>
     </div>
 
-    <div class="card-grid" style="margin-top: 30px;">
+    <h4 class="fw-bold text-dark mb-4 pb-2 border-bottom"><i class="bi bi-robot me-2 text-secondary"></i>AI Market Insights</h4>
+    
+    <div class="row g-4">
         
-        <div class="card" style="border-left: 5px solid #2e7d32;">
-            <div class="card-body">
-                <h3 style="color: #2e7d32; margin: 0;">🌾 Wheat Analysis</h3>
-                <p style="font-size: 0.9rem; color: #555;">Trend: <b style="color: #2e7d32;">Rising ⬆</b></p>
-                <p>Prices are peaking. Good time to sell stored stock.</p>
+        <div class="col-12 col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 border-top-wheat hover-lift bg-white">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h4 class="fw-bold text-success mb-0">Wheat</h4>
+                        <span class="fs-3">🌾</span>
+                    </div>
+                    <div class="d-inline-flex align-items-center bg-success bg-opacity-10 text-success rounded-pill px-3 py-1 mb-3 fw-bold">
+                        <i class="bi bi-arrow-up-right-circle-fill me-2"></i> Trend: Rising
+                    </div>
+                    <p class="text-muted mb-0">Prices are peaking due to seasonal demand. It is a highly favorable time to sell stored stock in the open market.</p>
+                </div>
             </div>
         </div>
 
-        <div class="card" style="border-left: 5px solid #fbc02d;">
-            <div class="card-body">
-                <h3 style="color: #fbc02d; margin: 0;">🍚 Rice Analysis</h3>
-                <p style="font-size: 0.9rem; color: #555;">Trend: <b>Stable ➡</b></p>
-                <p>Market is stable. Hold if you expect demand to rise next month.</p>
+        <div class="col-12 col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 border-top-rice hover-lift bg-white">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h4 class="fw-bold text-warning mb-0" style="color: #d39e00 !important;">Rice</h4>
+                        <span class="fs-3">🍚</span>
+                    </div>
+                    <div class="d-inline-flex align-items-center bg-warning bg-opacity-10 text-warning rounded-pill px-3 py-1 mb-3 fw-bold" style="color: #d39e00 !important;">
+                        <i class="bi bi-dash-circle-fill me-2"></i> Trend: Stable
+                    </div>
+                    <p class="text-muted mb-0">The market has stabilized. Hold your inventory if you expect regional demand to increase ahead of next month's festivals.</p>
+                </div>
             </div>
         </div>
 
-        <div class="card" style="border-left: 5px solid #d32f2f;">
-            <div class="card-body">
-                <h3 style="color: #d32f2f; margin: 0;">🧶 Cotton Analysis</h3>
-                <p style="font-size: 0.9rem; color: #555;">Trend: <b style="color: #2e7d32;">High Demand 🔥</b></p>
-                <p>Industrial demand is high. Prices at 6-month high.</p>
+        <div class="col-12 col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4 border-top-cotton hover-lift bg-white">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h4 class="fw-bold text-danger mb-0">Cotton</h4>
+                        <span class="fs-3">🧶</span>
+                    </div>
+                    <div class="d-inline-flex align-items-center bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-1 mb-3 fw-bold">
+                        <i class="bi bi-fire me-2"></i> High Demand
+                    </div>
+                    <p class="text-muted mb-0">Industrial textile demand is surging. Prices are currently at a 6-month high. Consider liquidating yield immediately.</p>
+                </div>
             </div>
         </div>
 
@@ -49,8 +87,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         
-        // ✅ 1. CATCH DATA FROM PYTHON
-        // variables passed from app.py are caught here
+        // 1. CATCH DATA FROM PYTHON
         const months = JSON.parse('{{ months | safe }}');
         const wheatData = JSON.parse('{{ wheat | safe }}');
         const riceData = JSON.parse('{{ rice | safe }}');
@@ -58,6 +95,11 @@
 
         // 2. RENDER THE CHART
         const ctx = document.getElementById('marketChart').getContext('2d');
+        
+        // Custom styling for better UI
+        Chart.defaults.font.family = "'Poppins', sans-serif";
+        Chart.defaults.color = '#6c757d';
+
         const marketChart = new Chart(ctx, {
             type: 'line', 
             data: {
@@ -66,27 +108,42 @@
                     {
                         label: 'Wheat (₹/Quintal)',
                         data: wheatData,
-                        borderColor: '#2e7d32', // Green
-                        backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                        borderColor: '#198754', // Bootstrap Success
+                        backgroundColor: 'rgba(25, 135, 84, 0.1)',
                         borderWidth: 3,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#198754',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
                         tension: 0.4,
                         fill: true
                     },
                     {
                         label: 'Rice (₹/Quintal)',
                         data: riceData,
-                        borderColor: '#fbc02d', // Yellow
-                        backgroundColor: 'rgba(251, 192, 45, 0.1)',
+                        borderColor: '#ffc107', // Bootstrap Warning
+                        backgroundColor: 'rgba(255, 193, 7, 0.1)',
                         borderWidth: 3,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#ffc107',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
                         tension: 0.4,
                         fill: true
                     },
                     {
                         label: 'Cotton (₹/Quintal)',
                         data: cottonData,
-                        borderColor: '#d32f2f', // Red
-                        backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                        borderColor: '#dc3545', // Bootstrap Danger
+                        backgroundColor: 'rgba(220, 53, 69, 0.1)',
                         borderWidth: 3,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#dc3545',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
                         tension: 0.4,
                         fill: true
                     }
@@ -100,13 +157,27 @@
                     intersect: false,
                 },
                 plugins: {
-                    legend: { position: 'top' },
-                    title: { display: true, text: 'Price History (Live Python Data)' }
+                    legend: { 
+                        position: 'top',
+                        labels: { usePointStyle: true, padding: 20, font: { weight: 'bold' } }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: { size: 14 },
+                        bodyFont: { size: 13 },
+                        displayColors: true,
+                        usePointStyle: true
+                    }
                 },
                 scales: {
+                    x: {
+                        grid: { display: false }
+                    },
                     y: {
                         beginAtZero: false,
-                        title: { display: true, text: 'Price (₹)' }
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                        title: { display: true, text: 'Price in Rupees (₹)', font: { weight: 'bold' } }
                     }
                 }
             }

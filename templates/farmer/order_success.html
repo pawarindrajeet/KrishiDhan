@@ -1,50 +1,68 @@
 {% extends "farmer/farmer_master.html" %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 60px auto; background: white; padding: 50px 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; animation: slideUp 0.5s ease-out;">
+<style>
+    /* Smooth entrance for the card */
+    .slide-up { animation: slideUp 0.6s ease-out forwards; opacity: 0; }
+    @keyframes slideUp {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
     
-    <div style="font-size: 80px; margin-bottom: 20px; animation: bounce 1s infinite alternate;">
-        🎉
-    </div>
+    /* Satisfying pop animation for the checkmark */
+    .bounce-in { animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; transform: scale(0); }
+    @keyframes bounceIn {
+        0% { transform: scale(0.5); opacity: 0; }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
+    }
 
-    <h2 style="color: #2e7d32; font-weight: 800; font-size: 2rem; margin-bottom: 15px;">Order Placed Successfully!</h2>
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
+</style>
+
+<div class="container-fluid pb-5 d-flex justify-content-center align-items-center" style="min-height: 75vh;">
     
-    <p style="color: #555; font-size: 1.1rem; line-height: 1.6;">
-        Thank you for shopping with <b>KrishiDhan</b>. <br>
-        Your seeds and fertilizers are being packed and will be delivered within <b>3-5 days</b>.
-    </p>
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card border-0 shadow-lg rounded-4 text-center p-4 p-md-5 bg-white slide-up">
+            
+            <div class="mb-4 bounce-in" style="animation-delay: 0.2s;">
+                <div class="d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 text-success rounded-circle" style="width: 130px; height: 130px;">
+                    <i class="bi bi-check-lg" style="font-size: 5rem; text-shadow: 2px 2px 4px rgba(25, 135, 84, 0.2);"></i>
+                </div>
+            </div>
+            
+            <h2 class="fw-bold text-dark mb-3 display-6">Order Confirmed! 🎉</h2>
+            
+            <p class="text-muted fs-5 mb-4" style="line-height: 1.6;">
+                Thank you for shopping with <strong class="text-success">KrishiDhan</strong>.<br>
+                Your agricultural supplies are being securely packed and prepared for dispatch.
+            </p>
 
-    <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+            <div class="bg-light border rounded-4 p-3 mb-4 d-inline-block shadow-sm">
+                <span class="text-muted small text-uppercase fw-bold" style="letter-spacing: 1px;">Estimated Delivery</span>
+                <h5 class="mb-0 text-success fw-bold mt-1">
+                    <i class="bi bi-truck me-2"></i> 3 - 5 Business Days
+                </h5>
+            </div>
 
-    <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-        
-        <a href="/farmer_dashboard" style="text-decoration: none;">
-            <button style="background: #2e7d32; color: white; padding: 12px 25px; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                🏠 Go to Dashboard
-            </button>
-        </a>
+            <hr class="border-secondary border-opacity-25 w-75 mx-auto mb-4">
 
-        <a href="/shop" style="text-decoration: none;">
-            <button style="background: white; color: #2e7d32; border: 2px solid #2e7d32; padding: 12px 25px; border-radius: 5px; font-size: 1rem; cursor: pointer; font-weight: bold;">
-                🛍️ Shop More
-            </button>
-        </a>
+            <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                <a href="/farmer_dashboard" class="btn btn-success fw-bold px-4 py-3 rounded-pill shadow-sm hover-lift d-flex align-items-center justify-content-center flex-grow-1">
+                    <i class="bi bi-house-door me-2"></i> Back to Dashboard
+                </a>
+                <a href="/shop" class="btn btn-outline-success fw-bold px-4 py-3 rounded-pill shadow-sm hover-lift d-flex align-items-center justify-content-center flex-grow-1">
+                    <i class="bi bi-bag-plus me-2"></i> Continue Shopping
+                </a>
+            </div>
 
+        </div>
     </div>
 
 </div>
 
-<style>
-    /* Slide the card up when page loads */
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    /* Make the emoji bounce slightly */
-    @keyframes bounce {
-        from { transform: translateY(0); }
-        to { transform: translateY(-10px); }
-    }
-</style>
-
+<script>
+    console.log("Order successfully processed. UI rendered.");
+</script>
 {% endblock %}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Inventory Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .hover-lift { transition: transform 0.2s ease; }
+        .hover-lift:hover { transform: translateY(-3px); }
+        .stock-bar { height: 8px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container py-5" style="max-width: 1200px;">
+    
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h2 class="fw-bold text-dark mb-1"><i class="bi bi-box-seam me-2 text-primary"></i>Live Inventory Tracker</h2>
+            <p class="text-muted mb-0">Monitor warehouse stock levels and restock items seamlessly.</p>
+        </div>
+        <a href="/admin_dashboard" class="btn btn-outline-secondary rounded-pill px-4 fw-bold">
+            <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show shadow-sm rounded-3" role="alert">
+                    <i class="bi {{ 'bi-check-circle-fill' if category == 'success' else 'bi-exclamation-triangle-fill' }} me-2"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-muted small text-uppercase tracking-wide">
+                        <tr>
+                            <th class="ps-4 py-3">Product Name</th>
+                            <th class="py-3">Category</th>
+                            <th class="py-3">Status</th>
+                            <th class="py-3 w-25">Stock Level</th>
+                            <th class="pe-4 py-3 text-end">Quick Restock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td class="ps-4 py-4 fw-bold text-dark">{{ product.name }}</td>
+                            <td class="py-4"><span class="badge bg-secondary bg-opacity-10 text-dark border rounded-pill">{{ product.category }}</span></td>
+                            
+                            <td class="py-4">
+                                {% if product.stock == 0 %}
+                                    <span class="badge bg-danger rounded-pill px-3"><i class="bi bi-x-circle me-1"></i> Out of Stock</span>
+                                {% elif product.stock < 20 %}
+                                    <span class="badge bg-warning text-dark rounded-pill px-3"><i class="bi bi-exclamation-triangle me-1"></i> Low Stock</span>
+                                {% else %}
+                                    <span class="badge bg-success rounded-pill px-3"><i class="bi bi-check-circle me-1"></i> Healthy</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="py-4">
+                                <div class="d-flex justify-content-between mb-1 small fw-bold">
+                                    <span>{{ product.stock }} Units</span>
+                                </div>
+                                <div class="progress stock-bar bg-light border">
+                                    {% set percent = (product.stock / 150) * 100 %}
+                                    <div class="progress-bar {% if product.stock < 20 %}bg-danger{% elif product.stock < 50 %}bg-warning{% else %}bg-success{% endif %}" 
+                                         role="progressbar" style="width: {{ percent if percent <= 100 else 100 }}%;"></div>
+                                </div>
+                            </td>
+
+                            <td class="pe-4 py-4 text-end">
+                                <form action="/restock/{{ product.id }}" method="POST" class="d-flex justify-content-end gap-2">
+                                    <input type="number" name="added_stock" class="form-control form-control-sm text-center shadow-sm" value="50" min="1" style="width: 80px; border-radius: 8px;">
+                                    <button type="submit" class="btn btn-sm btn-primary fw-bold shadow-sm hover-lift" style="border-radius: 8px;">
+                                        <i class="bi bi-plus-lg"></i> Add
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

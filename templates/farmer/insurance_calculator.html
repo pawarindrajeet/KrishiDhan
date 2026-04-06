@@ -1,0 +1,189 @@
+{% extends "farmer/farmer_master.html" %}
+
+{% block content %}
+<style>
+    .calculator-card { border-top: 6px solid #ffc107 !important; }
+    .result-box {
+        background-color: #f1f8e9;
+        border: 2px dashed #2e7d32;
+        border-radius: 12px;
+        transition: all 0.4s ease;
+    }
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
+</style>
+
+<div class="container-fluid pb-5" style="max-width: 1000px; margin: 0 auto;">
+
+    <div class="text-center mb-5 mt-3">
+        <h1 class="fw-bold text-success mb-2 display-6"><i class="bi bi-shield-check me-2"></i>Crop Insurance Calculator</h1>
+        <p class="text-muted fs-5">Estimate your share of the premium for Pradhan Mantri Fasal Bima Yojana (PMFBY).</p>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden calculator-card mb-5">
+        <div class="card-body p-4 p-md-5">
+            <form id="insuranceForm">
+                <div class="row g-4">
+                    
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold text-dark">Season <span class="text-danger">*</span></label>
+                        <select id="season" class="form-select shadow-sm py-2" onchange="updateRate()" required>
+                            <option value="">-- Select Season --</option>
+                            <option value="Kharif">Kharif (Summer)</option>
+                            <option value="Rabi">Rabi (Winter)</option>
+                        </select>
+                        <div id="rateBadge" class="mt-2" style="display: none;">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2" id="rateDisplay"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold text-dark">Year <span class="text-danger">*</span></label>
+                        <select class="form-select shadow-sm py-2">
+                            <option>2025</option>
+                            <option selected>2026</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold text-dark">Insurance Scheme</label>
+                        <input type="text" class="form-control bg-light py-2" value="PMFBY" readonly>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-dark">State <span class="text-danger">*</span></label>
+                        <select class="form-select shadow-sm py-2">
+                            <option>Maharashtra</option>
+                            <option>Punjab</option>
+                            <option>Haryana</option>
+                            <option>Madhya Pradesh</option>
+                            <option>Uttar Pradesh</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-dark">Crop Type <span class="text-danger">*</span></label>
+                        <select id="cropType" class="form-select shadow-sm py-2" onchange="updateRate()" required>
+                            <option value="FoodGrain">Food Grain / Oilseeds (Wheat, Rice, etc.)</option>
+                            <option value="Commercial">Commercial / Horticultural (Cotton, Sugarcane)</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-dark">Area (in Hectares) <span class="text-danger">*</span></label>
+                        <div class="input-group shadow-sm">
+                            <span class="input-group-text bg-light"><i class="bi bi-textarea-resize"></i></span>
+                            <input type="number" id="area" class="form-control py-2" placeholder="e.g. 2.5" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-dark">Sum Insured (₹) <span class="text-danger">*</span></label>
+                        <div class="input-group shadow-sm">
+                            <span class="input-group-text bg-light">₹</span>
+                            <input type="number" id="sumInsured" class="form-control py-2" placeholder="e.g. 80000" required>
+                        </div>
+                        <div class="form-text text-muted small">Value of your crop per hectare or total loan amount.</div>
+                    </div>
+
+                </div>
+
+                <div class="mt-5 d-flex gap-3 justify-content-end">
+                    <button type="button" onclick="resetForm()" class="btn btn-outline-secondary px-4 py-2 rounded-pill fw-bold">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i> Reset
+                    </button>
+                    <button type="button" onclick="calculatePremium()" class="btn btn-success px-5 py-2 rounded-pill fw-bold shadow hover-lift">
+                        <i class="bi bi-calculator-fill me-2"></i> Calculate Premium
+                    </button>
+                </div>
+            </form>
+
+            <div id="resultSection" class="mt-5 p-4 p-md-5 result-box d-none shadow-sm animate__animated animate__fadeInUp">
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold text-success mb-0"><i class="bi bi-file-earmark-bar-graph me-2"></i>Premium Estimate</h4>
+                    <hr class="border-success border-opacity-25 w-25 mx-auto">
+                </div>
+                
+                <div class="row g-4 align-items-center text-center">
+                    <div class="col-6 col-md-4">
+                        <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.75rem;">Total Sum Insured</small>
+                        <h3 class="fw-bold text-dark">₹ <span id="resSum">0</span></h3>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.75rem;">Farmer Rate</small>
+                        <h3 class="fw-bold text-primary"><span id="resRate">0</span>%</h3>
+                    </div>
+                    <div class="col-12 col-md-4 mt-4 mt-md-0">
+                        <div class="bg-white p-3 rounded-4 shadow-sm border border-success border-opacity-50">
+                            <small class="text-success text-uppercase fw-bold d-block mb-1" style="font-size: 0.85rem;">YOUR PREMIUM (TO PAY)</small>
+                            <h1 class="display-5 fw-bold text-success mb-0">₹ <span id="resPremium">0</span></h1>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 p-3 bg-white bg-opacity-50 rounded-3 text-center">
+                    <p class="mb-0 text-muted small">
+                        <i class="bi bi-info-circle me-1"></i> The Government of India pays the remaining premium subsidy. This is an estimate based on standard PMFBY rates for 2026.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateRate() {
+        let season = document.getElementById("season").value;
+        let cropType = document.getElementById("cropType").value;
+        let rateBadge = document.getElementById("rateBadge");
+        let rateDisplay = document.getElementById("rateDisplay");
+        let rate = 0;
+
+        if (cropType === "Commercial") {
+            rate = 5.0; // Commercial/Horticultural always 5%
+        } else if (season === "Kharif") {
+            rate = 2.0; // Kharif Food Grains 2%
+        } else if (season === "Rabi") {
+            rate = 1.5; // Rabi Food Grains 1.5%
+        }
+
+        if (rate > 0) {
+            rateDisplay.innerHTML = `<i class="bi bi-percent me-1"></i> Applicable Rate: ${rate}%`;
+            rateBadge.style.display = "block";
+        } else {
+            rateBadge.style.display = "none";
+        }
+        return rate;
+    }
+
+    function calculatePremium() {
+        let area = parseFloat(document.getElementById("area").value);
+        let sumInsured = parseFloat(document.getElementById("sumInsured").value);
+        let rate = updateRate();
+
+        if (isNaN(area) || isNaN(sumInsured) || rate === 0) {
+            alert("Please fill all details correctly before calculating.");
+            return;
+        }
+
+        let totalSum = sumInsured; 
+        let premium = totalSum * (rate / 100);
+
+        // Update UI with smooth transitions
+        document.getElementById("resSum").innerText = totalSum.toLocaleString('en-IN');
+        document.getElementById("resRate").innerText = rate;
+        document.getElementById("resPremium").innerText = premium.toLocaleString('en-IN');
+
+        const section = document.getElementById("resultSection");
+        section.classList.remove('d-none');
+        section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function resetForm() {
+        document.getElementById("insuranceForm").reset();
+        document.getElementById("resultSection").classList.add('d-none');
+        document.getElementById("rateBadge").style.display = "none";
+    }
+</script>
+{% endblock %}

@@ -1,73 +1,126 @@
 {% extends "farmer/farmer_master.html" %}
 
 {% block content %}
-<div style="max-width: 900px; margin: 0 auto; padding: 20px;">
-    
-    <div style="text-align: center; margin-bottom: 30px;">
-        <h2 style="color: #2e7d32; font-weight: 800; font-size: 2.2rem;">My Cultivations 🌱</h2>
-        <p style="color: #666;">Track your active crops and their progress.</p>
+<style>
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
+    .crop-card { border-left: 5px solid #2e7d32 !important; }
+</style>
+
+<div class="container-fluid pb-5">
+
+    <div class="d-flex align-items-center mb-4 mt-2">
+        <div>
+            <h2 class="text-success fw-bold mb-0">
+                <i class="bi bi-flower1 me-2"></i>My Cultivations
+            </h2>
+            <p class="text-muted mb-0 fs-5">Track your active crops, schedules, and daily tasks.</p>
+        </div>
     </div>
 
-    <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 30px; border-top: 4px solid #ff9800;">
-        <h3 style="margin-top: 0; color: #333;">➕ Add New Crop</h3>
-        <form action="/add_my_crop" method="POST" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
-            
-            <div style="flex: 1; min-width: 150px;">
-                <label>Crop Name</label>
-                <input type="text" name="crop_name" placeholder="e.g. Wheat" required style="width: 100%; padding: 8px;">
-            </div>
-            
-            <div style="flex: 1; min-width: 150px;">
-                <label>Sown Date</label>
-                <input type="date" name="sown_date" required style="width: 100%; padding: 8px;">
-            </div>
-
-            <div style="flex: 1; min-width: 150px;">
-                <label>Current Status</label>
-                <select name="status" style="width: 100%; padding: 8px;">
-                    <option value="Sowing">Sowing</option>
-                    <option value="Germination">Germination</option>
-                    <option value="Vegetative">Vegetative</option>
-                    <option value="Flowering">Flowering</option>
-                    <option value="Harvesting">Harvesting</option>
-                </select>
-            </div>
-
-            <div style="flex: 2; min-width: 200px;">
-                <label>Next Action (Reminder)</label>
-                <input type="text" name="next_action" placeholder="e.g. Apply Urea in 2 days" required style="width: 100%; padding: 8px;">
-            </div>
-
-            <button type="submit" style="background: #2e7d32; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; height: 38px;">Add</button>
-        </form>
-    </div>
-
-    <div class="card-grid">
-        {% if crops %}
-            {% for crop in crops %}
-            <div class="card" style="position: relative; border-left: 5px solid #2e7d32;">
+    <div class="card border-0 shadow-sm rounded-4 mb-5 overflow-hidden">
+        <div class="card-header bg-success bg-gradient text-white py-3 border-0 d-flex align-items-center">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-plus-circle me-2"></i>Add New Crop</h5>
+        </div>
+        <div class="card-body p-4">
+            <form action="/add_my_crop" method="POST" class="row g-3 align-items-end">
                 
-                <h3 style="margin-top: 0; color: #333;">🌾 {{ crop[2] }}</h3>
+                <div class="col-12 col-md-3">
+                    <label class="form-label fw-bold text-muted small mb-1">Crop Name</label>
+                    <div class="input-group shadow-sm">
+                        <span class="input-group-text bg-light"><i class="bi bi-tag text-success"></i></span>
+                        <input type="text" name="crop_name" class="form-control" placeholder="e.g. Wheat, Sugarcane" required>
+                    </div>
+                </div>
                 
-                <div style="margin: 15px 0; font-size: 0.95rem; color: #555;">
-                    <p><b>🗓️ Sown Date:</b> {{ crop[3] }}</p>
-                    <p><b>📊 Status:</b> <span style="background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 4px; font-weight: bold;">{{ crop[4] }}</span></p>
-                    <p style="background: #fff3e0; padding: 8px; border-radius: 5px; border: 1px solid #ffe0b2;">
-                        <b>🔔 Next Action:</b><br> {{ crop[5] }}
-                    </p>
+                <div class="col-12 col-md-3">
+                    <label class="form-label fw-bold text-muted small mb-1">Sown Date</label>
+                    <div class="input-group shadow-sm">
+                        <span class="input-group-text bg-light"><i class="bi bi-calendar-date text-success"></i></span>
+                        <input type="date" name="sown_date" class="form-control" required>
+                    </div>
                 </div>
 
-                <a href="/delete_my_crop/{{ crop[0] }}" onclick="return confirm('Are you sure you want to remove this crop?');">
-                    <button style="background: #ffebee; color: #c62828; border: 1px solid #c62828; padding: 8px 15px; cursor: pointer; border-radius: 4px; width: 100%;">
-                        🗑️ Remove
+                <div class="col-12 col-md-2">
+                    <label class="form-label fw-bold text-muted small mb-1">Current Status</label>
+                    <select name="status" class="form-select shadow-sm border-success border-opacity-50">
+                        <option value="Sowing">Sowing</option>
+                        <option value="Germination">Germination</option>
+                        <option value="Vegetative">Vegetative</option>
+                        <option value="Flowering">Flowering</option>
+                        <option value="Harvesting">Harvesting</option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <label class="form-label fw-bold text-muted small mb-1">Next Action (Reminder)</label>
+                    <div class="input-group shadow-sm">
+                        <span class="input-group-text bg-warning-subtle text-warning border-warning-subtle"><i class="bi bi-bell-fill"></i></span>
+                        <input type="text" name="next_action" class="form-control" placeholder="e.g. Apply Urea tomorrow" required>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-1 text-md-end mt-4 mt-md-0">
+                    <button type="submit" class="btn btn-success w-100 fw-bold shadow-sm h-100 py-2 hover-lift" title="Add Crop">
+                        <i class="bi bi-plus-lg fs-5"></i>
                     </button>
-                </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <h4 class="fw-bold text-dark mb-4 pb-2 border-bottom">Active Fields</h4>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+        {% if crops %}
+            {% for crop in crops %}
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm rounded-4 crop-card hover-lift bg-white">
+                    <div class="card-body p-4 d-flex flex-column">
+                        
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h4 class="fw-bold text-dark mb-0 text-truncate" title="{{ crop[2] }}">🌾 {{ crop[2] }}</h4>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill shadow-sm">
+                                {{ crop[4] }}
+                            </span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-muted mb-2 d-flex align-items-center">
+                                <i class="bi bi-calendar3 text-primary me-2 fs-5"></i> 
+                                <span><strong class="text-dark">Sown:</strong> {{ crop[3] }}</span>
+                            </p>
+                            
+                            <div class="bg-warning bg-opacity-10 border border-warning border-opacity-25 rounded-3 p-3 mt-3">
+                                <div class="d-flex align-items-start gap-2">
+                                    <i class="bi bi-bell-fill text-warning mt-1"></i>
+                                    <div>
+                                        <small class="text-uppercase fw-bold text-warning" style="font-size: 0.7rem;">Next Action</small>
+                                        <p class="mb-0 fw-medium text-dark">{{ crop[5] }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto pt-3 border-top">
+                            <a href="/delete_my_crop/{{ crop[0] }}" onclick="return confirm('Are you sure you want to remove {{ crop[2] }} from your tracked crops?');" class="btn btn-outline-danger w-100 fw-bold rounded-pill">
+                                <i class="bi bi-trash3 me-1"></i> Stop Tracking
+                            </a>
+                        </div>
+                        
+                    </div>
+                </div>
             </div>
             {% endfor %}
         {% else %}
-            <div style="width: 100%; text-align: center; color: #777; padding: 20px;">
-                <h3>No crops added yet.</h3>
-                <p>Use the form above to start tracking your farm!</p>
+            <div class="col-12">
+                <div class="card border-0 shadow-sm rounded-4 bg-white text-center py-5">
+                    <div class="card-body py-5">
+                        <i class="bi bi-layout-text-window-reverse text-muted opacity-25" style="font-size: 5rem;"></i>
+                        <h3 class="fw-bold text-dark mt-3">No crops tracked yet</h3>
+                        <p class="text-muted fs-5 mb-0">Use the form above to add your first crop and start monitoring your farm's progress!</p>
+                    </div>
+                </div>
             </div>
         {% endif %}
     </div>

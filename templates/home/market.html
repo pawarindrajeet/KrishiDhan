@@ -1,27 +1,87 @@
 {% extends "home/home_master.html" %}
 
 {% block content %}
-<h2 style="color: #2e7d32; text-align: center;">💰 Live Mandi Prices</h2>
+<style>
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
+    /* Subtle hover effect for table rows */
+    .table-hover tbody tr:hover td { background-color: #f8f9fa; }
+</style>
 
-<div style="overflow-x: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <table style="width: 100%; border-collapse: collapse;">
-        <tr style="background-color: #2e7d32; color: white;">
-            <th style="padding: 10px; text-align: left;">Crop Name</th>
-            <th style="padding: 10px; text-align: left;">Location</th>
-            <th style="padding: 10px; text-align: left;">Price (per Quintal)</th>
-            <th style="padding: 10px; text-align: left;">Date</th>
-        </tr>
+<div class="container-fluid py-5" style="max-width: 1100px; margin: 0 auto;">
+    
+    <div class="text-center mb-5">
+        <h2 class="display-6 fw-bold text-success mb-2"><i class="bi bi-graph-up-arrow me-2"></i>Live Mandi Prices</h2>
+        <p class="text-muted fs-5">Daily updated market rates for agricultural commodities across India.</p>
+    </div>
 
-        {% for price in prices %}
-        <tr style="border-bottom: 1px solid #ddd;">
-            <td style="padding: 10px;"><b>{{ price[1] }}</b> <br><small>{{ price[2] }}</small></td> <td style="padding: 10px;">{{ price[4] }}, {{ price[3] }}</td> <td style="padding: 10px; color: #d32f2f; font-weight: bold;">₹ {{ price[5] }}</td>
-            <td style="padding: 10px;">{{ price[6] }}</td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="4" style="padding: 20px; text-align: center;">No market prices updated today.</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden hover-lift bg-white">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 border-0">
+                
+                <thead class="table-success opacity-75">
+                    <tr>
+                        <th scope="col" class="py-3 ps-4 text-success fw-bold text-uppercase border-0" style="letter-spacing: 1px; font-size: 0.85rem;">Commodity</th>
+                        <th scope="col" class="py-3 text-success fw-bold text-uppercase border-0" style="letter-spacing: 1px; font-size: 0.85rem;">Location (Mandi)</th>
+                        <th scope="col" class="py-3 text-success fw-bold text-uppercase border-0" style="letter-spacing: 1px; font-size: 0.85rem;">Price (per Quintal)</th>
+                        <th scope="col" class="py-3 pe-4 text-success fw-bold text-uppercase text-end border-0" style="letter-spacing: 1px; font-size: 0.85rem;">Last Updated</th>
+                    </tr>
+                </thead>
+                
+                <tbody class="border-top-0">
+                    {% for price in prices %}
+                    <tr>
+                        <td class="ps-4 py-3 border-light">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px;">
+                                    <i class="bi bi-basket fs-5"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark">{{ price[1] }}</h6>
+                                    <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.5px;">{{ price[2] }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        
+                        <td class="py-3 border-light">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-geo-alt-fill text-danger opacity-75 fs-5"></i>
+                                <div>
+                                    <span class="d-block fw-bold text-dark">{{ price[4] }}</span>
+                                    <small class="text-muted">{{ price[3] }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        
+                        <td class="py-3 border-light">
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 fs-6 rounded-pill shadow-sm">
+                                ₹ {{ price[5] }}
+                            </span>
+                        </td>
+                        
+                        <td class="pe-4 py-3 text-end border-light">
+                            <span class="text-muted small fw-medium d-inline-flex align-items-center gap-1 bg-light px-2 py-1 rounded-2">
+                                <i class="bi bi-clock-history text-secondary"></i> {{ price[6] }}
+                            </span>
+                        </td>
+                    </tr>
+                    
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 border-0">
+                            <div class="d-inline-flex align-items-center justify-content-center bg-light text-muted rounded-circle mb-3" style="width: 80px; height: 80px;">
+                                <i class="bi bi-clipboard-x fs-1"></i>
+                            </div>
+                            <h5 class="fw-bold text-dark">No market prices available</h5>
+                            <p class="text-muted mb-0">The Mandi rates have not been updated for today yet. Please check back later.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+            </table>
+        </div>
+    </div>
+
 </div>
 {% endblock %}

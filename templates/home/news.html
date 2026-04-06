@@ -1,128 +1,147 @@
 {% extends "home/home_master.html" %}
 
 {% block content %}
-<div class="container" style="padding: 40px 20px;">
+<style>
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
     
-    <div style="text-align: center; margin-bottom: 50px;">
-        <h2 style="color: #333; font-weight: 800; font-size: 2.2rem; display: inline-block; border-bottom: 4px solid #2e7d32; padding-bottom: 5px;">
-            📰 Agriculture News & Schemes
-        </h2>
-        <p style="color: #666; margin-top: 10px;">Live updates from the agricultural world.</p>
+    .news-img { height: 200px; object-fit: cover; width: 100%; }
+    
+    /* Truncate text cleanly */
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+</style>
+
+<div class="container-fluid pb-5" style="max-width: 1200px; margin: 0 auto;">
+
+    <div class="text-center mb-5 mt-4">
+        <h1 class="display-6 fw-bold text-success mb-2"><i class="bi bi-newspaper me-2"></i>Agri News & Schemes</h1>
+        <p class="text-muted fs-5">Live updates from the agricultural world and core government benefits.</p>
     </div>
 
-    <div style="margin-bottom: 20px;">
-        <h3 style="color: #d32f2f; font-weight: bold; border-left: 5px solid #d32f2f; padding-left: 15px;">
-            🏛️ Government Schemes
-        </h3>
+    <div class="d-flex align-items-center mb-4">
+        <h3 class="fw-bold text-danger mb-0 me-3"><i class="bi bi-bank me-2"></i>Government Schemes</h3>
+        <div class="flex-grow-1 border-bottom border-2 border-danger border-opacity-25"></div>
     </div>
 
-    <div class="card-grid" style="margin-bottom: 50px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-5 pb-4 border-bottom">
         {% for scheme in schemes %}
-        <div class="card" style="border-top: 3px solid #d32f2f;">
-            <div class="card-body">
-                <div style="font-size: 2rem; margin-bottom: 10px;">{{ scheme.icon }}</div>
-                <h3 style="margin-top: 0; color: #333; font-size: 1.2rem;">{{ scheme.title }}</h3>
-                <p style="color: #666; font-size: 0.95rem;">{{ scheme.description }}</p>
-                
-                <button onclick="showLoginPopup()" class="primary-btn" style="background: white; color: #d32f2f; border: 1px solid #d32f2f; width: auto; margin-top: 15px;">
-                    View Details 🔒
-                </button>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
-    <div style="margin-bottom: 20px;">
-        <h3 style="color: #1976d2; font-weight: bold; border-left: 5px solid #1976d2; padding-left: 15px;">
-            📢 Latest Agriculture News
-        </h3>
-    </div>
-
-    <div class="card-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-        {% for news in updates %}
-        <div class="card" style="border-left: 3px solid #1976d2; display: flex; flex-direction: column;">
-            
-            {% if news.urlToImage %}
-            <div style="height: 160px; overflow: hidden; border-radius: 8px 8px 0 0;">
-                <img src="{{ news.urlToImage }}" alt="News" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            {% endif %}
-
-            <div class="card-body" style="flex: 1; display: flex; flex-direction: column;">
-                <h3 style="margin-top: 0; font-size: 1.1rem; line-height: 1.4;">{{ news.title }}</h3>
-                
-                <small style="color: #888; display: block; margin-bottom: 10px;">
-                    📅 {{ news.publishedAt[:10] }}
-                </small>
-                
-                <p style="color: #666; margin-top: 5px; font-size: 0.9rem; flex: 1;">
-                    {{ news.description[:100] }}...
-                </p>
-                
-                <div style="margin-top: 15px;">
-                    <a href="javascript:void(0)" onclick="showLoginPopup()" style="color: #1976d2; font-weight: bold; text-decoration: none;">
-                        Read Full Story 🔒
-                    </a>
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift bg-white" style="border-top: 5px solid #dc3545 !important;">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="display-5">{{ scheme.icon }}</div>
+                        <h5 class="fw-bold text-dark mb-0 line-clamp-2">{{ scheme.title }}</h5>
+                    </div>
+                    
+                    <p class="text-muted small mb-4 flex-grow-1" style="line-height: 1.6;">
+                        {{ scheme.description }}
+                    </p>
+                    
+                    <div class="mt-auto">
+                        <button type="button" class="btn btn-outline-danger w-100 fw-bold rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-lock-fill me-1"></i> View Details
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex align-items-center mb-4 mt-2">
+        <h3 class="fw-bold text-primary mb-0 me-3"><i class="bi bi-broadcast me-2"></i>Latest Announcements</h3>
+        <div class="flex-grow-1 border-bottom border-2 border-primary border-opacity-25"></div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-5">
+        {% for news in updates %}
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift bg-white overflow-hidden border-start border-primary border-4">
+                
+                <div class="position-relative bg-light">
+                    {% if news.urlToImage %}
+                        <img src="{{ news.urlToImage }}" alt="News Thumbnail" class="card-img-top news-img">
+                    {% else %}
+                        <div class="news-img d-flex flex-column align-items-center justify-content-center bg-secondary bg-opacity-10 text-secondary">
+                            <i class="bi bi-image text-muted opacity-50" style="font-size: 3rem;"></i>
+                            <span class="small fw-bold mt-2 text-uppercase tracking-wide opacity-75">No Image</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="card-body p-4 d-flex flex-column">
+                    <h6 class="fw-bold text-dark mb-2 line-clamp-2" style="line-height: 1.4;">
+                        {{ news.title }}
+                    </h6>
+                    
+                    <small class="text-primary fw-bold d-block mb-2">
+                        <i class="bi bi-calendar3 me-1"></i> {{ news.publishedAt[:10] }}
+                    </small>
+                    
+                    <p class="text-muted small mb-4 flex-grow-1 line-clamp-3">
+                        {% if news.description %}
+                            {{ news.description }}
+                        {% else %}
+                            Click below to read the full update.
+                        {% endif %}
+                    </p>
+                    
+                    <div class="mt-auto pt-3 border-top">
+                        <button type="button" class="btn btn-light text-primary border border-primary-subtle w-100 fw-bold rounded-pill" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-lock-fill me-1"></i> Read Full Story
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
         {% else %}
-        <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: #777;">
-            <p>Fetching latest news...</p>
+        <div class="col-12 text-center py-5">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="text-muted mt-3 fw-bold">Fetching latest news...</p>
         </div>
         {% endfor %}
     </div>
-    
-    <div style="text-align: center; margin-top: 40px;">
-        <a href="/" style="font-weight: bold; color: #1b5e20; text-decoration: none;">← Back to Home</a>
+
+    <div class="text-center mt-4">
+        <a href="/" class="btn btn-outline-success fw-bold rounded-pill px-5 hover-lift">
+            <i class="bi bi-arrow-left me-2"></i> Back to Home
+        </a>
     </div>
 
 </div>
 
-<div id="loginModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px);">
-    <div style="background-color: white; margin: 15% auto; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); position: relative; animation: slideDown 0.3s ease-out;">
-        
-        <div style="font-size: 50px; margin-bottom: 10px;">🔒</div>
-        <h2 style="color: #333; margin-bottom: 10px;">Login Required</h2>
-        <p style="color: #666; margin-bottom: 25px;">You need to be logged in to read the full story or apply for this scheme.</p>
-        
-        <div style="display: flex; gap: 10px; justify-content: center;">
-            <a href="/login" style="flex: 1;">
-                <button class="primary-btn" style="width: 100%;">Login Now</button>
-            </a>
-            <a href="/register" style="flex: 1;">
-                <button class="primary-btn" style="width: 100%; background: white; color: #2e7d32; border: 1px solid #2e7d32;">Sign Up</button>
-            </a>
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg text-center p-4">
+            
+            <div class="modal-header border-0 justify-content-end p-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body px-4 pb-4">
+                <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 text-danger rounded-circle mb-3" style="width: 80px; height: 80px;">
+                    <i class="bi bi-shield-lock-fill" style="font-size: 3rem;"></i>
+                </div>
+                
+                <h3 class="fw-bold text-dark mb-2" id="loginModalLabel">Login Required</h3>
+                <p class="text-muted mb-4">You need to have a verified KrishiDhan account to read full stories or apply for government schemes.</p>
+                
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                    <a href="/login" class="btn btn-success fw-bold px-4 py-2 rounded-pill shadow-sm flex-grow-1">
+                        Login Now
+                    </a>
+                    <a href="/register" class="btn btn-outline-success fw-bold px-4 py-2 rounded-pill shadow-sm flex-grow-1">
+                        Create Account
+                    </a>
+                </div>
+            </div>
+
         </div>
-        
-        <button onclick="closeLoginPopup()" style="background: none; border: none; margin-top: 15px; color: #888; cursor: pointer; text-decoration: underline;">
-            Close
-        </button>
     </div>
 </div>
 
-<script>
-    function showLoginPopup() {
-        document.getElementById('loginModal').style.display = 'block';
-    }
-    
-    function closeLoginPopup() {
-        document.getElementById('loginModal').style.display = 'none';
-    }
-    
-    // Close if clicking outside the box
-    window.onclick = function(event) {
-        var modal = document.getElementById('loginModal');
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-</script>
-
-<style>
-    @keyframes slideDown {
-        from { transform: translateY(-30px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-</style>
 {% endblock %}

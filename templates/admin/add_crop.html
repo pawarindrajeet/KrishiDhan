@@ -1,35 +1,86 @@
 {% extends "admin/admin_master.html" %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px;">
-    <h2 style="color: #1b5e20;">🌱 Add New Crop</h2>
+<style>
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
+    
+    /* Admin form styling */
+    .form-floating > label { color: #6c757d; font-weight: 500; }
+    .form-control:focus, .form-select:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
+    
+    /* Custom dashed border for upload zone */
+    .border-dashed { border-style: dashed !important; border-width: 2px !important; }
+</style>
 
-    <form action="/add_crop" method="POST" enctype="multipart/form-data">
-        
-        <label><b>Crop Name:</b></label>
-        <input type="text" name="name" required placeholder="e.g. Alphonso Mango" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+<div class="container-fluid py-4 d-flex justify-content-center">
+    
+    <div class="card border-0 shadow-lg rounded-4 w-100 bg-white" style="max-width: 650px; border-top: 5px solid #0d6efd !important;">
+        <div class="card-body p-4 p-md-5">
+            
+            <div class="text-center mb-4 pb-2 border-bottom border-light">
+                <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle mb-3" style="width: 70px; height: 70px;">
+                    <i class="bi bi-flower1" style="font-size: 2.5rem;"></i>
+                </div>
+                <h3 class="fw-bold text-dark mb-1">Add New Crop</h3>
+                <p class="text-muted small">Expand the KrishiDhan database by adding crop details, soil requirements, and growing guides.</p>
+            </div>
 
-        <label><b>Category:</b></label>
-        <select name="category" style="width: 100%; padding: 8px; margin-bottom: 10px;">
-            <option value="Fruits">Fruits</option>
-            <option value="Vegetables">Vegetables</option>
-            <option value="Spices">Spices</option>
-            <option value="Oil Seeds">Oil Seeds</option>
-            <option value="Cash Crops">Cash Crops</option>
-            <option value="Cereals">Cereals</option>
-            <option value="Flowers">Flowers</option>
-        </select>
+            <form action="/add_crop" method="POST" enctype="multipart/form-data">
+                
+                <div class="form-floating mb-3 shadow-sm rounded-3">
+                    <input type="text" class="form-control border-0 bg-light" id="name" name="name" placeholder="e.g. Alphonso Mango" required>
+                    <label for="name"><i class="bi bi-tag me-2"></i>Crop Name</label>
+                </div>
 
-        <label><b>Soil Type:</b></label>
-        <input type="text" name="soil_type" placeholder="e.g. Black Soil, Alluvial" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+                <div class="row g-3 mb-3">
+                    
+                    <div class="col-md-6">
+                        <div class="form-floating shadow-sm rounded-3">
+                            <select class="form-select border-0 bg-light fw-medium" id="category" name="category" aria-label="Crop Category">
+                                <option value="Cereals" selected>Cereals (Wheat, Rice)</option>
+                                <option value="Vegetables">Vegetables</option>
+                                <option value="Fruits">Fruits</option>
+                                <option value="Pulses">Pulses</option>
+                                <option value="Spices">Spices</option>
+                                <option value="Oil Seeds">Oil Seeds</option>
+                                <option value="Cash Crops">Cash Crops</option>
+                                <option value="Flowers">Flowers</option>
+                            </select>
+                            <label for="category"><i class="bi bi-diagram-3 me-2"></i>Category</label>
+                        </div>
+                    </div>
 
-        <label><b>Crop Image:</b></label>
-        <input type="file" name="image" required style="margin-bottom: 10px;">
+                    <div class="col-md-6">
+                        <div class="form-floating shadow-sm rounded-3">
+                            <input type="text" class="form-control border-0 bg-light" id="soil_type" name="soil_type" placeholder="e.g. Black Soil, Alluvial" required>
+                            <label for="soil_type"><i class="bi bi-layers me-2"></i>Optimal Soil Type</label>
+                        </div>
+                    </div>
+                </div>
 
-        <label><b>Description / Growth Details:</b></label>
-        <textarea name="description" rows="4" placeholder="Enter details about season, water, etc." style="width: 100%; padding: 8px; margin-bottom: 10px;"></textarea>
+                <div class="form-floating mb-4 shadow-sm rounded-3">
+                    <textarea class="form-control border-0 bg-light" id="description" name="description" placeholder="Enter details..." style="height: 120px" required></textarea>
+                    <label for="description"><i class="bi bi-card-text me-2"></i>Description / Growth Details</label>
+                </div>
 
-        <button type="submit" style="background-color: #2e7d32; color: white; padding: 10px 20px; border: none; cursor: pointer; width: 100%;">Add Crop</button>
-    </form>
+                <div class="mb-4 p-4 border-primary border-opacity-25 rounded-4 bg-primary bg-opacity-10 text-center border-dashed">
+                    <label for="image" class="form-label fw-bold text-primary mb-2 d-block cursor-pointer">
+                        <i class="bi bi-cloud-arrow-up-fill fs-1 d-block mb-2"></i>
+                        Upload Crop Thumbnail
+                    </label>
+                    <input class="form-control form-control-sm border-0 shadow-sm mx-auto" type="file" id="image" name="image" accept="image/*" required style="max-width: 300px;">
+                    <div class="form-text small mt-2 text-muted">Recommended: High quality JPG or PNG, max 2MB.</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow hover-lift d-flex justify-content-center align-items-center gap-2">
+                    <i class="bi bi-cloud-plus-fill fs-5"></i> Publish Crop Data
+                </button>
+                
+            </form>
+
+        </div>
+    </div>
+
 </div>
 {% endblock %}

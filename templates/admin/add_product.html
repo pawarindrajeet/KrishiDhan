@@ -1,25 +1,78 @@
 {% extends "admin/admin_master.html" %}
+
 {% block content %}
-<div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px;">
-    <h2 style="color: #2e7d32; text-align: center;">➕ Add Shop Product</h2>
-    <form action="/add_product" method="POST" enctype="multipart/form-data">
-        <label>Product Name</label>
-        <input type="text" name="name" required placeholder="e.g. Urea Fertilizer">
-        
-        <label>Category</label>
-        <select name="category" style="width: 100%; padding: 10px; margin-bottom: 15px;">
-            <option value="Seeds">Seeds</option>
-            <option value="Fertilizer">Fertilizer</option>
-            <option value="Tools">Tools</option>
-        </select>
+<style>
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
+    
+    /* Admin form styling */
+    .form-floating > label { color: #6c757d; font-weight: 500; }
+    .form-control:focus, .form-select:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
+    
+    /* Custom dashed border for upload zone */
+    .border-dashed { border-style: dashed !important; border-width: 2px !important; }
+</style>
 
-        <label>Price (₹)</label>
-        <input type="number" name="price" required placeholder="e.g. 500">
+<div class="container-fluid py-4 d-flex justify-content-center">
+    
+    <div class="card border-0 shadow-lg rounded-4 w-100 bg-white" style="max-width: 650px; border-top: 5px solid #0d6efd !important;">
+        <div class="card-body p-4 p-md-5">
+            
+            <div class="text-center mb-4 pb-2 border-bottom border-light">
+                <div class="d-inline-flex align-items-center justify-content-center bg-info bg-opacity-10 text-info rounded-circle mb-3" style="width: 70px; height: 70px;">
+                    <i class="bi bi-box-seam" style="font-size: 2.5rem;"></i>
+                </div>
+                <h3 class="fw-bold text-dark mb-1">Add Shop Product</h3>
+                <p class="text-muted small">List a new item in the KrishiDhan marketplace for farmers to purchase.</p>
+            </div>
 
-        <label>Product Image</label>
-        <input type="file" name="image" required style="margin-bottom: 20px;">
+            <form action="/add_product" method="POST" enctype="multipart/form-data">
+                
+                <div class="form-floating mb-3 shadow-sm rounded-3">
+                    <input type="text" class="form-control border-0 bg-light" id="name" name="name" placeholder="e.g. Urea Fertilizer" required>
+                    <label for="name"><i class="bi bi-tag me-2"></i>Product Name</label>
+                </div>
 
-        <button type="submit" class="primary-btn">Add Product</button>
-    </form>
+                <div class="row g-3 mb-4">
+                    
+                    <div class="col-md-6">
+                        <div class="form-floating shadow-sm rounded-3">
+                            <select class="form-select border-0 bg-light fw-medium" id="category" name="category" aria-label="Product Category">
+                                <option value="Seeds" selected>Seeds</option>
+                                <option value="Fertilizer">Fertilizers & Nutrients</option>
+                                <option value="Pesticides">Pesticides & Protection</option>
+                                <option value="Tools">Farming Tools & Equipment</option>
+                                <option value="Machinery">Heavy Machinery</option>
+                            </select>
+                            <label for="category"><i class="bi bi-diagram-3 me-2"></i>Category</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating shadow-sm rounded-3">
+                            <input type="number" class="form-control border-0 bg-light fw-bold text-success" id="price" name="price" placeholder="e.g. 500" min="0" required>
+                            <label for="price"><i class="bi bi-currency-rupee me-2"></i>Price (₹)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-5 p-4 border-info border-opacity-25 rounded-4 bg-info bg-opacity-10 text-center border-dashed">
+                    <label for="image" class="form-label fw-bold text-info mb-2 d-block cursor-pointer">
+                        <i class="bi bi-cloud-arrow-up-fill fs-1 d-block mb-2"></i>
+                        Upload Product Image
+                    </label>
+                    <input class="form-control form-control-sm border-0 shadow-sm mx-auto" type="file" id="image" name="image" accept="image/*" required style="max-width: 300px;">
+                    <div class="form-text small mt-2 text-muted">Clear, well-lit images convert best. Max size: 2MB.</div>
+                </div>
+
+                <button type="submit" class="btn btn-info text-dark w-100 fw-bold py-3 rounded-pill shadow hover-lift d-flex justify-content-center align-items-center gap-2">
+                    <i class="bi bi-plus-circle-fill fs-5"></i> Add to Inventory
+                </button>
+                
+            </form>
+
+        </div>
+    </div>
+
 </div>
 {% endblock %}

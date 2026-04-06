@@ -1,71 +1,202 @@
 {% extends "farmer/farmer_master.html" %}
 
 {% block content %}
-<div class="container" style="max-width: 900px; margin-bottom: 50px;">
+<style>
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
+    .product-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
     
-    <h2 style="color: #1b5e20; margin-bottom: 20px;">🛒 Your Shopping Cart</h2>
+    /* Payment Modal Styling */
+    .payment-input { background-color: #f8f9fa; border: 1px solid #dee2e6; }
+    .payment-input:focus { background-color: #fff; border-color: #198754; box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25); }
+</style>
 
-    {% if cart_items %}
-    <div class="card" style="padding: 0; overflow: hidden;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead style="background: #f4f4f4; border-bottom: 2px solid #ddd;">
-                <tr style="text-align: left;">
-                    <th style="padding: 15px;">Product</th>
-                    <th style="padding: 15px;">Price</th>
-                    <th style="padding: 15px;">Quantity</th>
-                    <th style="padding: 15px;">Total</th>
-                    <th style="padding: 15px;">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cart_items %}
-                <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 15px; display: flex; align-items: center; gap: 15px;">
-                        <img src="{{ url_for('static', filename='images/products/' + (item[4] or 'default_product.png')) }}" 
-                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
-                        <div>
-                            <strong>{{ item[1] }}</strong><br>
-                            <small style="color: #888;">{{ item[2] }}</small>
-                        </div>
-                    </td>
+<div class="container-fluid py-4" style="max-width: 1100px;">
 
-                    <td style="padding: 15px;">₹{{ item[3] }}</td>
-
-                    <td style="padding: 15px;">
-                        <span style="background: #e3f2fd; padding: 5px 12px; border-radius: 5px; font-weight: bold;">
-                            {{ item[5] }}
-                        </span>
-                    </td>
-
-                    <td style="padding: 15px; font-weight: bold; color: #2e7d32;">₹{{ item[6] }}</td>
-
-                    <td style="padding: 15px;">
-                        <a href="/remove_from_cart/{{ item[0] }}" style="color: #d32f2f; text-decoration: none; font-weight: bold;">✕ Remove</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <div style="text-align: right; margin-top: 25px;">
-        <h3 style="margin-bottom: 15px;">Grand Total: <span style="color: #2e7d32; font-size: 1.8rem;">₹{{ grand_total }}</span></h3>
-        
-        <a href="/checkout">
-            <button class="primary-btn" style="padding: 12px 30px; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);">
-                Proceed to Order ➡
-            </button>
+    <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-3">
+        <div>
+            <h2 class="fw-bold text-dark mb-1"><i class="bi bi-cart-check me-2 text-success"></i>Your Shopping Cart</h2>
+            <p class="text-muted mb-0">Review your items and proceed to secure checkout.</p>
+        </div>
+        <a href="/shop" class="btn btn-outline-secondary rounded-pill fw-bold px-4 hover-lift d-none d-md-block">
+            <i class="bi bi-arrow-left me-2"></i>Continue Shopping
         </a>
     </div>
 
+    {% if cart_items %}
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light text-muted small text-uppercase tracking-wide">
+                                <tr>
+                                    <th class="ps-4 py-3">Product</th>
+                                    <th class="py-3">Price</th>
+                                    <th class="py-3">Qty</th>
+                                    <th class="py-3">Total</th>
+                                    <th class="pe-4 py-3 text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart_items %}
+                                <tr>
+                                    <td class="ps-4 py-3">
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ url_for('static', filename='images/products/' + (item[4] or 'default_product.png')) }}" 
+                                                 onerror="this.src='{{ url_for('static', filename='images/products/default_product.png') }}'" 
+                                                 alt="Product" class="product-thumb me-3 shadow-sm">
+                                            <div>
+                                                <h6 class="mb-0 fw-bold text-dark">{{ item[1] }}</h6>
+                                                <small class="text-muted">{{ item[2] }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 fw-medium">₹{{ item[3] }}</td>
+                                    <td class="py-3">
+                                        <span class="badge bg-secondary bg-opacity-10 text-dark border px-3 py-2 rounded-pill fs-6">{{ item[5] }}</span>
+                                    </td>
+                                    <td class="py-3 fw-bold text-success">₹{{ item[6] }}</td>
+                                    <td class="pe-4 py-3 text-end">
+                                        <a href="/remove_from_cart/{{ item[0] }}" class="btn btn-sm btn-outline-danger rounded-circle p-2 hover-lift" title="Remove Item">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 border-top border-success border-4 bg-white sticky-top" style="top: 90px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">Order Summary</h5>
+                    
+                    <div class="d-flex justify-content-between mb-3 text-muted">
+                        <span>Subtotal</span>
+                        <span class="fw-medium">₹{{ grand_total }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 text-muted">
+                        <span>Shipping</span>
+                        <span class="fw-medium text-success">Free</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 text-muted">
+                        <span>Taxes (GST 5%)</span>
+                        <span class="fw-medium">₹{{ (grand_total * 0.05)|round(2) }}</span>
+                    </div>
+                    
+                    <hr class="my-4 border-secondary border-opacity-25">
+                    
+                    <div class="d-flex justify-content-between mb-4 align-items-center">
+                        <span class="fw-bold text-dark fs-5">Total Amount</span>
+                        <h3 class="fw-bold text-success mb-0">₹{{ grand_total + (grand_total * 0.05)|round(2) }}</h3>
+                    </div>
+
+                    <button type="button" class="btn btn-success w-100 py-3 fw-bold rounded-pill shadow hover-lift d-flex align-items-center justify-content-center gap-2" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                        <i class="bi bi-lock-fill fs-5"></i> Secure Checkout
+                    </button>
+                    
+                    <div class="text-center mt-3">
+                        <i class="bi bi-shield-check text-success"></i> <small class="text-muted">256-bit SSL Encrypted</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% else %}
-    <div style="text-align: center; padding: 50px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-        <div style="font-size: 50px; margin-bottom: 15px;">🛒</div>
-        <h3 style="color: #555;">Your Cart is Empty</h3>
-        <p style="color: #888; margin-bottom: 20px;">Looks like you haven't added anything yet.</p>
-        <a href="/shop"><button class="primary-btn">Go to Shop</button></a>
+    <div class="text-center py-5 my-5">
+        <div class="d-inline-flex align-items-center justify-content-center bg-secondary bg-opacity-10 text-muted rounded-circle mb-4" style="width: 100px; height: 100px;">
+            <i class="bi bi-cart-x" style="font-size: 3rem;"></i>
+        </div>
+        <h3 class="fw-bold text-dark mb-2">Your cart is empty</h3>
+        <p class="text-muted fs-5 mb-4">Looks like you haven't added any agricultural supplies yet.</p>
+        <a href="/shop" class="btn btn-success btn-lg rounded-pill fw-bold px-5 shadow hover-lift">
+            Browse KrishiDhan Shop
+        </a>
     </div>
     {% endif %}
 
 </div>
+
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            
+            <div class="modal-header border-bottom-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body p-4 p-md-5 pt-2">
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold text-dark mb-1">KrishiDhan Pay</h4>
+                    <p class="text-muted small">Enter payment details to complete your order</p>
+                </div>
+
+                <form action="/checkout" method="GET" id="paymentForm">
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small">Card Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-credit-card text-muted"></i></span>
+                            <input type="text" class="form-control payment-input border-start-0 ps-0" placeholder="0000 0000 0000 0000" required maxlength="19">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <label class="form-label fw-bold text-muted small">Expiry Date</label>
+                            <input type="text" class="form-control payment-input" placeholder="MM/YY" required maxlength="5">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-bold text-muted small">CVV</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control payment-input" placeholder="123" required maxlength="3">
+                                <span class="input-group-text bg-light"><i class="bi bi-info-circle text-muted" title="3 digits on back of card"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-muted small">Name on Card</label>
+                        <input type="text" class="form-control payment-input" placeholder="Name" required value="{{ session.get('name', '') }}">
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100 py-3 fw-bold rounded-pill shadow-sm" id="payBtn">
+                        Pay ₹{{ grand_total + (grand_total * 0.05)|round(2) }}
+                    </button>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Stop instant redirect
+        const btn = document.getElementById('payBtn');
+        
+        // Step 1: Show Processing State
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing Payment...';
+        btn.classList.replace('btn-dark', 'btn-primary');
+        btn.disabled = true;
+
+        // Step 2: Simulate network delay, then redirect to actual success route
+        setTimeout(() => {
+            btn.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Payment Successful!';
+            btn.classList.replace('btn-primary', 'btn-success');
+            
+            setTimeout(() => {
+                window.location.href = "/checkout";
+            }, 800);
+        }, 2000); // 2 second fake processing time
+    });
+</script>
+
 {% endblock %}

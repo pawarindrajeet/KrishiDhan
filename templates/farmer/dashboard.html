@@ -1,106 +1,178 @@
 {% extends "farmer/farmer_master.html" %}
 
 {% block content %}
-<div style="margin-bottom: 30px;">
-    <h1 style="color: #2e7d32; font-weight: 700;">Welcome back, {{ user[0] }}! 🚜</h1>
-    <p style="color: #666;">Here is your farm overview and daily updates.</p>
-</div>
+<style>
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
+    .icon-circle { width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-bottom: 15px; }
+</style>
 
-<div class="card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border: none; margin-bottom: 40px; box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);">
-    <div class="card-body">
-        {% if weather %}
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                <div>
-                    <h4 style="margin: 0; opacity: 0.9; font-weight: normal;">Current Weather in</h4>
-                    <h2 style="margin: 5px 0; font-size: 2.5rem; font-weight: bold;">📍 {{ weather.name }}</h2>
-                    <h1 style="margin: 0; font-size: 3.5rem; font-weight: bold;">{{ weather.main.temp }}°C</h1>
-                    <p style="font-size: 1.1rem; text-transform: capitalize;">☁️ {{ weather.weather[0].description }}</p>
+<div class="container-fluid pb-5">
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2">
+        <div>
+            <h2 class="text-success fw-bold mb-0">Welcome back, {{ user[0] }}! 🚜</h2>
+            <p class="text-muted mb-0 fs-5">Here is your farm overview and daily updates.</p>
+        </div>
+        <div class="text-md-end d-none d-md-block">
+            <h5 class="fw-bold mb-0 text-secondary" id="current-date"></h5>
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 mt-1">Farm Status: Active</span>
+        </div>
+    </div>
+
+    {% if weather %}
+    <div class="card border-0 shadow-sm rounded-4 mb-5 text-white overflow-hidden" style="background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);">
+        <div class="card-body p-4 p-md-5">
+            <div class="row align-items-center">
+                <div class="col-md-8 text-center text-md-start">
+                    <h5 class="opacity-75 mb-1 text-uppercase tracking-wide" style="letter-spacing: 1px;">Current Weather In</h5>
+                    <h2 class="display-6 fw-bold mb-4"><i class="bi bi-geo-alt-fill text-danger"></i> {{ weather.name }}</h2>
+                    
+                    <div class="d-flex flex-column flex-md-row align-items-center gap-3 gap-md-4 mb-4 mb-md-0">
+                        <h1 class="fw-bold mb-0" style="font-size: 4.5rem; line-height: 1;">{{ weather.main.temp }}°C</h1>
+                        <div class="border-start border-white border-opacity-50 ps-md-4 d-none d-md-block">
+                            <p class="fs-4 text-capitalize fw-semibold mb-0">{{ weather.weather[0].description }}</p>
+                            <p class="mb-0 opacity-75 fs-5">Feels like {{ weather.main.feels_like }}°C</p>
+                        </div>
+                        <div class="d-md-none text-center">
+                            <p class="fs-4 text-capitalize fw-semibold mb-0">{{ weather.weather[0].description }}</p>
+                            <p class="mb-0 opacity-75">Feels like {{ weather.main.feels_like }}°C</p>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <img src="https://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@4x.png" alt="Weather Icon" style="width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(255,255,255,0.4));">
+                <div class="col-md-4 text-center text-md-end mt-3 mt-md-0">
+                    <img src="https://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@4x.png" alt="Weather Icon" class="img-fluid" style="max-height: 180px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.4));">
                 </div>
             </div>
             
-            <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 15px; display: flex; gap: 40px; flex-wrap: wrap;">
-                <div>
-                    <small style="opacity: 0.9;">💧 Humidity</small><br>
-                    <strong style="font-size: 1.2rem;">{{ weather.main.humidity }}%</strong>
+            <hr class="border-white border-opacity-25 my-4">
+            
+            <div class="row text-center text-md-start g-3">
+                <div class="col-6 col-md-4">
+                    <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2">
+                        <i class="bi bi-droplet-half fs-3 opacity-75"></i>
+                        <div>
+                            <small class="opacity-75 text-uppercase fw-bold d-block" style="font-size: 0.75rem;">Humidity</small>
+                            <h5 class="mb-0 fw-bold">{{ weather.main.humidity }}%</h5>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <small style="opacity: 0.9;">🌬️ Wind Speed</small><br>
-                    <strong style="font-size: 1.2rem;">{{ weather.wind.speed }} m/s</strong>
-                </div>
-                <div>
-                    <small style="opacity: 0.9;">🌡️ Feels Like</small><br>
-                    <strong style="font-size: 1.2rem;">{{ weather.main.feels_like }}°C</strong>
+                <div class="col-6 col-md-4">
+                    <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2">
+                        <i class="bi bi-wind fs-3 opacity-75"></i>
+                        <div>
+                            <small class="opacity-75 text-uppercase fw-bold d-block" style="font-size: 0.75rem;">Wind Speed</small>
+                            <h5 class="mb-0 fw-bold">{{ weather.wind.speed }} m/s</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
-        {% else %}
-            <div style="text-align: center; padding: 20px;">
-                <h3>🌤️ Weather Unavailable</h3>
-                <p>Could not load weather data for your district. Please check your internet connection.</p>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning border-0 shadow-sm rounded-4 mb-5 p-4 d-flex align-items-center gap-3" role="alert">
+        <i class="bi bi-cloud-slash-fill fs-1 text-warning"></i>
+        <div>
+            <h5 class="fw-bold mb-1 text-dark">Weather Unavailable</h5>
+            <p class="mb-0 text-muted">Could not load weather data for your district. Please check your internet connection.</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="d-flex align-items-center mb-4">
+        <h3 class="fw-bold text-success mb-0 me-3">Your Services</h3>
+        <div class="flex-grow-1 border-bottom border-2 border-success border-opacity-25"></div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+        
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center pb-2">
+                <div class="card-body pt-4">
+                    <div class="icon-circle bg-primary bg-opacity-10 text-primary">
+                        <i class="bi bi-robot" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">AI Recommender</h5>
+                    <p class="text-muted small mb-4 px-2">Get scientific crop advice based on soil N-P-K values and local climate.</p>
+                    <a href="/recommend" class="btn btn-outline-primary fw-bold rounded-pill px-4 w-75">Get Advice</a>
+                </div>
             </div>
-        {% endif %}
+        </div>
+
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center pb-2">
+                <div class="card-body pt-4">
+                    <div class="icon-circle bg-danger bg-opacity-10 text-danger">
+                        <i class="bi bi-prescription2" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Plant Doctor</h5>
+                    <p class="text-muted small mb-4 px-2">Upload a photo of a leaf to detect diseases and get instant cures.</p>
+                    <a href="/plant_doctor" class="btn btn-outline-danger fw-bold rounded-pill px-4 w-75">Check Health</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center pb-2">
+                <div class="card-body pt-4">
+                    <div class="icon-circle bg-warning bg-opacity-10 text-warning" style="color: #f57c00 !important;">
+                        <i class="bi bi-shop" style="font-size: 2.5rem; color: #f57c00;"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Agri Shop</h5>
+                    <p class="text-muted small mb-4 px-2">Buy high-quality seeds, organic fertilizers, and farming tools directly.</p>
+                    <a href="/shop" class="btn btn-outline-warning fw-bold rounded-pill px-4 w-75" style="color: #f57c00; border-color: #f57c00;">Go to Shop</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center pb-2">
+                <div class="card-body pt-4">
+                    <div class="icon-circle" style="background-color: #f3e5f5; color: #7b1fa2;">
+                        <i class="bi bi-flower1" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">My Farm</h5>
+                    <p class="text-muted small mb-4 px-2">Track your currently sown crops, manage schedules, and calculate yields.</p>
+                    <a href="/my_crops" class="btn fw-bold rounded-pill px-4 w-75" style="border-color: #7b1fa2; color: #7b1fa2;">Manage Farm</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center pb-2">
+                <div class="card-body pt-4">
+                    <div class="icon-circle bg-info bg-opacity-10 text-info">
+                        <i class="bi bi-calculator" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Land Calculator</h5>
+                    <p class="text-muted small mb-4 px-2">Instantly convert land measurements between Guntha, Acre, and Hectare.</p>
+                    <a href="/calculator" class="btn btn-outline-info fw-bold rounded-pill px-4 w-75 text-dark">Calculate</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift text-center pb-2">
+                <div class="card-body pt-4">
+                    <div class="icon-circle bg-success bg-opacity-10 text-success">
+                        <i class="bi bi-book" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Crop Info Library</h5>
+                    <p class="text-muted small mb-4 px-2">Read comprehensive guides about soil types, seasons, and farming tips.</p>
+                    <a href="/crops" class="btn btn-outline-success fw-bold rounded-pill px-4 w-75">Read More</a>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
-<h3 style="color: #2e7d32; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px;">Your Services</h3>
-
-<div class="card-grid">
-    
-    <div class="card feature-card">
-        <div style="height: 120px; background: #e3f2fd; display: flex; align-items: center; justify-content: center; font-size: 40px; border-radius: 12px 12px 0 0;">🤖</div>
-        <div class="card-body" style="text-align: center;">
-            <h3>AI Recommender</h3>
-            <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Get scientific crop advice based on soil N-P-K values.</p>
-            <a href="/recommend"><button class="primary-btn" style="background: #1976d2;">Get Advice</button></a>
-        </div>
-    </div>
-
-    <div class="card feature-card">
-        <div style="height: 120px; background: #ffebee; display: flex; align-items: center; justify-content: center; font-size: 40px; border-radius: 12px 12px 0 0;">🩺</div>
-        <div class="card-body" style="text-align: center;">
-            <h3>Plant Doctor</h3>
-            <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Upload a photo of a leaf to detect diseases instantly.</p>
-            <a href="/plant_doctor"><button class="primary-btn" style="background: #d32f2f;">Check Health</button></a>
-        </div>
-    </div>
-
-    <div class="card feature-card">
-        <div style="height: 120px; background: #fff3e0; display: flex; align-items: center; justify-content: center; font-size: 40px; border-radius: 12px 12px 0 0;">🛒</div>
-        <div class="card-body" style="text-align: center;">
-            <h3>Agri Shop</h3>
-            <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Buy quality seeds, fertilizers, and tools directly.</p>
-            <a href="/shop"><button class="primary-btn" style="background: #f57c00;">Go to Shop</button></a>
-        </div>
-    </div>
-
-    <div class="card feature-card">
-        <div style="height: 120px; background: #f3e5f5; display: flex; align-items: center; justify-content: center; font-size: 40px; border-radius: 12px 12px 0 0;">🌱</div>
-        <div class="card-body" style="text-align: center;">
-            <h3>My Farm</h3>
-            <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Track your currently sown crops and schedules.</p>
-            <a href="/my_crops"><button class="primary-btn" style="background: #7b1fa2;">Manage Farm</button></a>
-        </div>
-    </div>
-
-    <div class="card feature-card">
-        <div style="height: 120px; background: #fffde7; display: flex; align-items: center; justify-content: center; font-size: 40px; border-radius: 12px 12px 0 0;">📐</div>
-        <div class="card-body" style="text-align: center;">
-            <h3>Land Calculator</h3>
-            <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Convert Guntha, Acre, and Hectare easily.</p>
-            <a href="/calculator"><button class="primary-btn" style="background: #fbc02d; color: #333;">Calculate</button></a>
-        </div>
-    </div>
-
-    <div class="card feature-card">
-        <div style="height: 120px; background: #e8f5e9; display: flex; align-items: center; justify-content: center; font-size: 40px; border-radius: 12px 12px 0 0;">📚</div>
-        <div class="card-body" style="text-align: center;">
-            <h3>Crop Info</h3>
-            <p style="color: #666; margin-bottom: 15px; font-size: 0.9rem;">Read about soil types, seasons, and farming tips.</p>
-            <a href="/crops"><button class="primary-btn" style="background: #388e3c;">Read More</button></a>
-        </div>
-    </div>
-
-</div>
+<script>
+    // Automatically inject today's date into the header
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const dateElement = document.getElementById('current-date');
+    if(dateElement) {
+        dateElement.innerText = new Date().toLocaleDateString('en-IN', options);
+    }
+</script>
 {% endblock %}

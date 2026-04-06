@@ -1,85 +1,105 @@
 {% extends "home/home_master.html" %}
 
 {% block content %}
-
-<div class="centered-wrapper">
+<style>
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
     
-    <div class="card" style="width: 100%; max-width: 500px; border-top: 5px solid #f57c00; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
-        <div class="card-body" style="padding: 40px;">
+    /* Smooth entrance animation */
+    .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+    @keyframes fadeInUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    
+    /* Premium floating labels */
+    .form-floating > label { color: #6c757d; font-weight: 500; }
+    .form-control:focus { border-color: #fd7e14; box-shadow: 0 0 0 0.25rem rgba(253, 126, 20, 0.25); }
+</style>
+
+<div class="container-fluid d-flex justify-content-center align-items-center py-5" style="min-height: 85vh;">
+    
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden fade-in-up bg-white w-100" style="max-width: 600px; border-top: 5px solid #fd7e14 !important;">
+        <div class="card-body p-4 p-md-5">
             
-            <div style="text-align: center; margin-bottom: 30px;">
-                <h2 style="color: #f57c00; font-weight: 800; font-size: 2rem;">New Registration 📝</h2>
-                <p style="color: #666;">Join the KrishiDhan community today.</p>
+            <div class="text-center mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center bg-warning bg-opacity-10 text-warning rounded-circle mb-3" style="width: 70px; height: 70px;">
+                    <i class="bi bi-person-lines-fill" style="font-size: 2.5rem;"></i>
+                </div>
+                <h3 class="fw-bold text-dark mb-1">Create Account</h3>
+                <p class="text-muted small">Join the KrishiDhan community and modernize your farming.</p>
             </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show border-0 shadow-sm rounded-3 py-2" role="alert">
+                            <i class="bi bi-exclamation-circle-fill me-2"></i> <strong>{{ message }}</strong>
+                            <button type="button" class="btn-close pb-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
             <form action="/register" method="POST">
                 
-                <div style="margin-bottom: 15px;">
-                    <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">Full Name</label>
-                    <input type="text" name="full_name" required placeholder="e.g. Ram Patil"
-                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                <div class="form-floating mb-3 shadow-sm rounded-3">
+                    <input type="text" class="form-control border-0 bg-light" id="full_name" name="full_name" placeholder="Full Name" required>
+                    <label for="full_name"><i class="bi bi-person me-2"></i>Full Name</label>
                 </div>
 
-                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                    <div style="flex: 1;">
-                        <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">Mobile Number</label>
-                        <input type="text" name="mobile" required placeholder="e.g. 9876543210"
-                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <div class="form-floating shadow-sm rounded-3">
+                            <input type="tel" class="form-control border-0 bg-light" id="mobile" name="mobile" placeholder="Mobile Number" required>
+                            <label for="mobile"><i class="bi bi-phone me-2"></i>Mobile Number</label>
+                        </div>
                     </div>
-                    <div style="flex: 1;">
-                        <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">Email*</label>
-                        <input type="email" name="email" required placeholder="e.g. ram@gmail.com"
-                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                    <div style="flex: 1;">
-                        <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">State</label>
-                        <input type="text" name="state" required placeholder="e.g. Maharashtra"
-                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
-                    </div>
-                    <div style="flex: 1;">
-                        <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">District</label>
-                        <input type="text" name="district" required placeholder="e.g. Pune"
-                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                    <div class="col-md-6">
+                        <div class="form-floating shadow-sm rounded-3">
+                            <input type="email" class="form-control border-0 bg-light" id="email" name="email" placeholder="Email Address" required>
+                            <label for="email"><i class="bi bi-envelope me-2"></i>Email Address</label>
+                        </div>
                     </div>
                 </div>
 
-                <div style="margin-bottom: 25px;">
-                    <label style="font-weight: 600; color: #333; margin-bottom: 5px; display: block;">Create Password</label>
-                    <input type="password" name="password" required placeholder="Enter a strong password"
-                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <div class="form-floating shadow-sm rounded-3">
+                            <input type="text" class="form-control border-0 bg-light" id="state" name="state" placeholder="State" required>
+                            <label for="state"><i class="bi bi-map me-2"></i>State</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating shadow-sm rounded-3">
+                            <input type="text" class="form-control border-0 bg-light" id="district" name="district" placeholder="District" required>
+                            <label for="district"><i class="bi bi-pin-map me-2"></i>District</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-floating mb-4 shadow-sm rounded-3">
+                    <input type="password" class="form-control border-0 bg-light" id="password" name="password" placeholder="Create Password" required>
+                    <label for="password"><i class="bi bi-key me-2"></i>Create Password</label>
                 </div>
 
                 <input type="hidden" name="role" value="farmer">
 
-                <button type="submit" class="primary-btn" 
-                        style="background: linear-gradient(135deg, #f57c00 0%, #ff9800 100%); border: none; font-size: 1.1rem; width: 100%; border-radius: 8px;">
-                    Register Now 🚀
+                <button type="submit" class="btn btn-warning text-dark w-100 fw-bold py-3 rounded-pill shadow hover-lift d-flex justify-content-center align-items-center gap-2">
+                    Register Now <i class="bi bi-rocket-takeoff fs-5"></i>
                 </button>
-
+                
             </form>
 
-            <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee;">
-                <p style="color: #666;">Already have an account?</p>
-                <a href="/login" style="color: #f57c00; font-weight: bold; text-decoration: none; border-bottom: 2px solid #f57c00;">
-                    Login Here
+            <div class="text-center mt-4 pt-4 border-top border-secondary border-opacity-10">
+                <p class="text-muted mb-2 small">Already have an account?</p>
+                <a href="/login" class="btn btn-outline-warning text-dark fw-bold w-100 rounded-pill hover-lift">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Login Here
                 </a>
             </div>
 
         </div>
     </div>
+
 </div>
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <script>
-          alert("{{ message }}");
-      </script>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
 {% endblock %}

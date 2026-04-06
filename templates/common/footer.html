@@ -1,32 +1,100 @@
-<footer class="site-footer">
-    <div class="footer-content">
+<style>
+    /* Premium Footer Link Hover Effects */
+    .footer-link {
+        color: #adb5bd; /* Bootstrap text-muted equivalent for dark bg */
+        transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
+        display: inline-block;
+    }
+    .footer-link:hover {
+        color: #198754; /* Success Green */
+        transform: translateX(5px);
+    }
+    
+    /* Social Media Circular Icons */
+    .social-icon {
+        width: 36px; height: 36px;
+        display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.05);
+        color: #adb5bd;
+        transition: all 0.3s ease;
+    }
+    .social-icon:hover {
+        background-color: #198754;
+        color: #ffffff;
+        transform: translateY(-3px);
+    }
+</style>
+
+<footer class="bg-dark text-white pt-5 pb-3 mt-auto w-100">
+    <div class="container">
         
-        <div class="footer-section">
-            <h3>KrishiDhan 🌾</h3>
-            <p style="line-height: 1.6; color: #bbb;">
-                Empowering Indian farmers with technology, market access, and scientific knowledge.
-            </p>
+        <div class="row g-4 mb-4">
+            
+            <div class="col-lg-5 col-md-6 pe-lg-5">
+                <h4 class="fw-bold text-white mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-tree-fill text-success"></i> KrishiDhan
+                </h4>
+                <p class="text-secondary" style="line-height: 1.8;">
+                    Empowering Indian farmers with next-generation technology, real-time market access, and AI-driven scientific knowledge to cultivate lasting wealth.
+                </p>
+                
+                <div class="d-flex gap-2 mt-4">
+                    <a href="#" class="social-icon text-decoration-none"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-icon text-decoration-none"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="social-icon text-decoration-none"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-icon text-decoration-none"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <h5 class="fw-bold text-white mb-4">Quick Links</h5>
+                <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+                    <li><a href="/" class="text-decoration-none footer-link"><i class="bi bi-chevron-right small me-1 text-success"></i> Home</a></li>
+                    <li><a href="/login" class="text-decoration-none footer-link"><i class="bi bi-chevron-right small me-1 text-success"></i> Farmer Login</a></li>
+                    <li><a href="/register" class="text-decoration-none footer-link"><i class="bi bi-chevron-right small me-1 text-success"></i> Join Platform</a></li>
+                    <li><a href="/news" class="text-decoration-none footer-link"><i class="bi bi-chevron-right small me-1 text-success"></i> Agriculture News</a></li>
+                    <li><a href="/calculator" class="text-decoration-none footer-link"><i class="bi bi-chevron-right small me-1 text-success"></i> Land Calculator</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-4 col-md-12">
+                <h5 class="fw-bold text-white mb-4">Contact Us</h5>
+                <ul class="list-unstyled d-flex flex-column gap-3 mb-0 text-secondary">
+                    <li class="d-flex align-items-start gap-3">
+                        <i class="bi bi-geo-alt-fill text-success mt-1 fs-5"></i>
+                        <div>
+                            <span class="d-block fw-medium text-white">Headquarters</span>
+                            Pune, Maharashtra, India
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center gap-3">
+                        <i class="bi bi-envelope-fill text-success fs-5"></i>
+                        <a href="mailto:support@krishidhan.com" class="text-secondary text-decoration-none footer-link m-0">support@krishidhan.com</a>
+                    </li>
+                    <li class="d-flex align-items-center gap-3">
+                        <i class="bi bi-telephone-fill text-success fs-5"></i>
+                        <span class="m-0">+91 98765 43210</span>
+                    </li>
+                </ul>
+            </div>
+
         </div>
 
-        <div class="footer-section">
-            <h3>Quick Links</h3>
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin-bottom: 10px;"><a href="/" style="color: #bbb; text-decoration: none;">Home</a></li>
-                <li style="margin-bottom: 10px;"><a href="/login" style="color: #bbb; text-decoration: none;">Farmer Login</a></li>
-                <li style="margin-bottom: 10px;"><a href="/news" style="color: #bbb; text-decoration: none;">Agriculture News</a></li>
-            </ul>
+        <hr class="border-secondary border-opacity-25 my-4">
+
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                <span class="text-secondary small">
+                    &copy; <script>document.write(new Date().getFullYear())</script> <strong>KrishiDhan</strong>. All Rights Reserved.
+                </span>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <span class="text-secondary small d-inline-flex align-items-center gap-1">
+                    Designed with <i class="bi bi-heart-fill text-danger mx-1"></i> for Indian Farmers
+                </span>
+            </div>
         </div>
 
-        <div class="footer-section">
-            <h3>Contact Us</h3>
-            <p style="color: #bbb; margin-bottom: 10px;">📍 Pune, Maharashtra, India</p>
-            <p style="color: #bbb; margin-bottom: 10px;">📧 support@krishidhan.com</p>
-            <p style="color: #bbb;">📞 +91 98765 43210</p>
-        </div>
-
-    </div>
-
-    <div class="footer-bottom">
-        &copy; 2025 KrishiDhan. All Rights Reserved. | Designed with ❤️ for Farmers.
     </div>
 </footer>
